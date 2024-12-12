@@ -22,9 +22,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginStart="@dimen/margin_padding_title"
+                android:layout_marginTop="@dimen/margin_padding_top"
+                android:layout_marginBottom="@dimen/margin_padding_title"
                 android:text="@string/app_name"
                 android:textColor="@color/white"
                 android:textSize="@dimen/title_text_size" />
@@ -41,49 +41,49 @@
             <Button
                 android:id="@+id/search_button"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/all_free_space"
                 android:layout_marginBottom="@dimen/default_padding"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:text="@string/search"
-                android:textColor="@color/black"
+                android:textColor="@color/title_color"
                 android:textSize="@dimen/title_text_size"
                 app:cornerRadius="@dimen/button_radius"
                 app:icon="@drawable/vector_search"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_button_padding"
-                app:iconTint="@color/black" />
+                app:iconTint="@color/title_color" />
 
             <Button
                 android:id="@+id/playlist_button"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/all_free_space"
                 android:layout_marginBottom="@dimen/default_padding"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:text="@string/playlist"
-                android:textColor="@color/black"
+                android:textColor="@color/title_color"
                 android:textSize="@dimen/title_text_size"
                 app:cornerRadius="@dimen/button_radius"
                 app:icon="@drawable/vector_playlist"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_button_padding"
-                app:iconTint="@color/black" />
+                app:iconTint="@color/title_color" />
 
             <Button
                 android:id="@+id/settings_button"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="@dimen/all_free_space"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:text="@string/settings"
-                android:textColor="@color/black"
+                android:textColor="@color/title_color"
                 android:textSize="@dimen/title_text_size"
                 app:cornerRadius="@dimen/button_radius"
                 app:icon="@drawable/vector_settings"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_button_padding"
-                app:iconTint="@color/black" />
+                app:iconTint="@color/title_color" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

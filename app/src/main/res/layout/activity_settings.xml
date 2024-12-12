@@ -31,11 +31,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="12dp"
+                android:paddingHorizontal="@dimen/margin_padding_title"
+                android:paddingTop="@dimen/margin_padding_top"
+                android:paddingBottom="@dimen/margin_padding_title"
                 android:text="@string/settings"
-                android:textColor="@color/black"
+                android:textColor="@color/title_color"
                 android:textSize="@dimen/title_text_size" />
 
 
@@ -50,8 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginVertical="21dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginVertical="@dimen/text_margin_vertical"
+                android:layout_marginStart="@dimen/text_margin_start"
                 android:text="@string/dark_mode"
                 android:textColor="@color/black"
                 android:textSize="@dimen/basic_text_size" />
@@ -73,8 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginVertical="21dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginVertical="@dimen/text_margin_vertical"
+                android:layout_marginStart="@dimen/text_margin_start"
                 android:text="@string/share_app"
                 android:textColor="@color/black"
                 android:textSize="@dimen/basic_text_size" />
@@ -97,8 +97,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginVertical="21dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginVertical="@dimen/text_margin_vertical"
+                android:layout_marginStart="@dimen/text_margin_start"
                 android:text="@string/write_to_support"
                 android:textColor="@color/black"
                 android:textSize="@dimen/basic_text_size" />
@@ -121,8 +121,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginVertical="21dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginVertical="@dimen/text_margin_vertical"
+                android:layout_marginStart="@dimen/text_margin_start"
                 android:text="@string/user_agreement"
                 android:textColor="@color/black"
                 android:textSize="@dimen/basic_text_size" />

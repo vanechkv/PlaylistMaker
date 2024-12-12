@@ -6,4 +6,9 @@
     <dimen name="default_padding">16dp</dimen>
     <dimen name="icon_button_padding">8dp</dimen>
     <dimen name="button_radius">16dp</dimen>
+    <dimen name="all_free_space">0dp</dimen>
+    <dimen name="text_margin_vertical">21dp</dimen>
+    <dimen name="text_margin_start">16dp</dimen>
+    <dimen name="margin_padding_title">12dp</dimen>
+    <dimen name="margin_padding_top">10dp</dimen>
 </resources>
