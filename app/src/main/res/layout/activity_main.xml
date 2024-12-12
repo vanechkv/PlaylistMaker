@@ -41,49 +41,49 @@
             <Button
                 android:id="@+id/search_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/all_free_space"
+                android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/default_padding"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:text="@string/search"
-                android:textColor="@color/title_color"
+                android:textColor="@color/black"
                 android:textSize="@dimen/title_text_size"
                 app:cornerRadius="@dimen/button_radius"
                 app:icon="@drawable/vector_search"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_button_padding"
-                app:iconTint="@color/title_color" />
+                app:iconTint="@color/black" />
 
             <Button
                 android:id="@+id/playlist_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/all_free_space"
+                android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/default_padding"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:text="@string/playlist"
-                android:textColor="@color/title_color"
+                android:textColor="@color/black"
                 android:textSize="@dimen/title_text_size"
                 app:cornerRadius="@dimen/button_radius"
                 app:icon="@drawable/vector_playlist"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_button_padding"
-                app:iconTint="@color/title_color" />
+                app:iconTint="@color/black" />
 
             <Button
                 android:id="@+id/settings_button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/all_free_space"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:text="@string/settings"
-                android:textColor="@color/title_color"
+                android:textColor="@color/black"
                 android:textSize="@dimen/title_text_size"
                 app:cornerRadius="@dimen/button_radius"
                 app:icon="@drawable/vector_settings"
                 app:iconGravity="textStart"
                 app:iconPadding="@dimen/icon_button_padding"
-                app:iconTint="@color/title_color" />
+                app:iconTint="@color/black" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
