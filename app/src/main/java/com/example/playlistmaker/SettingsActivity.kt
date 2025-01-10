@@ -29,8 +29,10 @@ class SettingsActivity : AppCompatActivity() {
         shareFrameLayout.setOnClickListener {
             val shareText = getString(R.string.url_ya_praktikum_android_developer)
             val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText)
-            shareIntent.setType("text/plain")
+            shareIntent.apply {
+                putExtra(Intent.EXTRA_TEXT, shareText)
+                setType("text/plain")
+            }
             startActivity(shareIntent)
         }
 
@@ -41,10 +43,12 @@ class SettingsActivity : AppCompatActivity() {
             val supportSubject = getString(R.string.support_subject)
             val supportEmail = getString(R.string.support_email)
             val supportIntent = Intent(Intent.ACTION_SENDTO)
-            supportIntent.data = Uri.parse("mailto:")
-            supportIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
-            supportIntent.putExtra(Intent.EXTRA_SUBJECT, supportSubject)
-            supportIntent.putExtra(Intent.EXTRA_TEXT, supportText)
+            supportIntent.apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(supportEmail))
+                putExtra(Intent.EXTRA_SUBJECT, supportSubject)
+                putExtra(Intent.EXTRA_TEXT, supportText)
+            }
             startActivity(supportIntent)
         }
 
@@ -53,7 +57,9 @@ class SettingsActivity : AppCompatActivity() {
         userAgreementFrameLayout.setOnClickListener {
             val urlUserAgreement = getString(R.string.url_user_agreement)
             val userAgreementIntent = Intent(Intent.ACTION_VIEW)
-            userAgreementIntent.data = Uri.parse(urlUserAgreement)
+            userAgreementIntent.apply {
+                data = Uri.parse(urlUserAgreement)
+            }
             startActivity(userAgreementIntent)
         }
 

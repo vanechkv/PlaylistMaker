@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout style="@style/LinearLayoutStyle"
+    <LinearLayout
+        style="@style/LinearLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,6 +19,8 @@
 
             <TextView
                 style="@style/MainTitleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/app_name" />
         </FrameLayout>
 
@@ -32,18 +35,28 @@
             <Button
                 android:id="@+id/search_button"
                 style="@style/MainButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/all_free_space"
+                android:layout_weight="1"
                 android:text="@string/search"
                 app:icon="@drawable/vector_search" />
 
             <Button
                 android:id="@+id/playlist_button"
                 style="@style/MainButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/all_free_space"
+                android:layout_weight="1"
                 android:text="@string/playlist"
                 app:icon="@drawable/vector_playlist" />
 
             <Button
                 android:id="@+id/settings_button"
                 style="@style/MainButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/all_free_space"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
                 android:text="@string/settings"
                 app:icon="@drawable/vector_settings" />
         </LinearLayout>

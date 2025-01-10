@@ -11,8 +11,6 @@
     </style>
 
     <style name="MainTitleTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:layout_marginStart">@dimen/margin_padding_title</item>
         <item name="android:layout_marginTop">@dimen/margin_padding_top</item>
@@ -23,8 +21,6 @@
     </style>
 
     <style name="TitleTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingHorizontal">@dimen/margin_padding_title</item>
         <item name="android:paddingTop">@dimen/margin_padding_top</item>
         <item name="android:paddingBottom">@dimen/margin_padding_title</item>
@@ -34,8 +30,6 @@
     </style>
 
     <style name="SettingsComponentTextStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:layout_marginVertical">@dimen/text_margin_vertical</item>
         <item name="android:layout_marginStart">@dimen/text_margin_start</item>
@@ -45,17 +39,12 @@
     </style>
 
     <style name="SettingsComponentIconStyle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">end</item>
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
 
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/all_free_space</item>
         <item name="android:layout_marginBottom">@dimen/default_padding_margin</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:backgroundTint">?attr/colorOnPrimary</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textSize">@dimen/title_text_size</item>
@@ -69,8 +58,6 @@
     </style>
 
     <style name="SearchIconStyle">
-        <item name="android:layout_width">@dimen/search_icon_size</item>
-        <item name="android:layout_height">@dimen/search_icon_size</item>
         <item name="android:layout_marginVertical">@dimen/search_icon_margin_vertical</item>
         <item name="android:layout_marginStart">13dp</item>
         <item name="android:layout_marginEnd">9dp</item>
@@ -78,8 +65,6 @@
     </style>
 
     <style name="CloseIconStyle">
-        <item name="android:layout_width">@dimen/close_icon_size</item>
-        <item name="android:layout_height">@dimen/close_icon_size</item>
         <item name="android:layout_marginVertical">@dimen/close_icon_margin_vertical</item>
         <item name="android:layout_marginHorizontal">@dimen/close_icon_margin_horizontal</item>
         <item name="tint">?attr/colorPrimary</item>
@@ -87,14 +72,12 @@
     </style>
 
     <style name="SearchEditTextStyle">
-        <item name="android:layout_width">@dimen/all_free_space</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">1</item>
         <item name="android:background">@null</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:maxLines">1</item>
         <item name="android:textColorHint">?attr/colorPrimary</item>
         <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
     </style>
 
     <style name="SearchLinearLayoutStyle">

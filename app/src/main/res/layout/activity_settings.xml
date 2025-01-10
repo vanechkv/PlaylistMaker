@@ -31,6 +31,8 @@
 
             <TextView
                 style="@style/TitleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/settings" />
 
 
@@ -43,60 +45,79 @@
 
             <TextView
                 style="@style/SettingsComponentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/dark_mode" />
 
             <Switch
                 style="@style/SettingsComponentIconStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="22dp" />
         </FrameLayout>
 
-        <FrameLayout style="@style/FrameLayoutSettingsStyle"
+        <FrameLayout
             android:id="@+id/share_frame_layout"
+            style="@style/FrameLayoutSettingsStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsComponentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/share_app" />
 
             <ImageView
                 style="@style/SettingsComponentIconStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="21dp"
                 android:src="@drawable/vector_share" />
         </FrameLayout>
 
-        <FrameLayout style="@style/FrameLayoutSettingsStyle"
+        <FrameLayout
             android:id="@+id/support_frame_layout"
+            style="@style/FrameLayoutSettingsStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsComponentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/write_to_support" />
 
             <ImageView
                 style="@style/SettingsComponentIconStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="22.1dp"
                 android:layout_marginEnd="14dp"
                 android:layout_marginBottom="20.9dp"
                 android:src="@drawable/group_support" />
         </FrameLayout>
 
-        <FrameLayout style="@style/FrameLayoutSettingsStyle"
+        <FrameLayout
             android:id="@+id/user_agreement_frame_layout"
+            style="@style/FrameLayoutSettingsStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
                 style="@style/SettingsComponentTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/user_agreement" />
 
             <ImageView
                 style="@style/SettingsComponentIconStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="23dp"
