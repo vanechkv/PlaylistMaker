@@ -7,4 +7,67 @@
     android:layout_height="match_parent"
     tools:context=".SearchActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_layout"
+            android:orientation="horizontal">
+
+
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:backgroundTint="?attr/colorPrimary"
+                android:padding="@dimen/default_padding_margin"
+                android:src="@drawable/vector_back"
+                app:tint="?attr/colorOnPrimary" />
+
+            <TextView
+                style="@style/TitleTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/SearchLinearLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/default_padding_margin"
+            android:layout_marginVertical="@dimen/icon_button_padding"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/SearchIconStyle"
+                android:layout_width="@dimen/search_icon_size"
+                android:layout_height="@dimen/search_icon_size"
+                android:src="@drawable/vector_search" />
+
+            <EditText
+                android:id="@+id/search_edit_text"
+                style="@style/SearchEditTextStyle"
+                android:layout_width="@dimen/all_free_space"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="@string/search"
+                android:inputType="text" />
+
+            <ImageView
+                android:id="@+id/search_close_btn"
+                style="@style/CloseIconStyle"
+                android:layout_width="@dimen/close_icon_size"
+                android:layout_height="@dimen/close_icon_size"
+                android:src="@drawable/ic_close"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

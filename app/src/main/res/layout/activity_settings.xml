@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         android:orientation="vertical">
 
         <LinearLayout
@@ -24,19 +24,16 @@
                 android:id="@+id/back_button"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
-                android:padding="16dp"
-                android:src="@drawable/vector_back" />
+                android:backgroundTint="?attr/colorPrimary"
+                android:padding="@dimen/default_padding_margin"
+                android:src="@drawable/vector_back"
+                app:tint="?attr/colorOnPrimary" />
 
             <TextView
+                style="@style/TitleTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="@dimen/margin_padding_title"
-                android:paddingTop="@dimen/margin_padding_top"
-                android:paddingBottom="@dimen/margin_padding_title"
-                android:text="@string/settings"
-                android:textColor="@color/title_color"
-                android:textSize="@dimen/title_text_size" />
+                android:text="@string/settings" />
 
 
         </LinearLayout>
@@ -47,42 +44,36 @@
             android:layout_marginTop="24dp">
 
             <TextView
+                style="@style/SettingsComponentTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginVertical="@dimen/text_margin_vertical"
-                android:layout_marginStart="@dimen/text_margin_start"
-                android:text="@string/dark_mode"
-                android:textColor="@color/black"
-                android:textSize="@dimen/basic_text_size" />
+                android:text="@string/dark_mode" />
 
             <Switch
+                style="@style/SettingsComponentIconStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:layout_marginTop="21dp"
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="22dp" />
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/share_frame_layout"
+            style="@style/FrameLayoutSettingsStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/SettingsComponentTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginVertical="@dimen/text_margin_vertical"
-                android:layout_marginStart="@dimen/text_margin_start"
-                android:text="@string/share_app"
-                android:textColor="@color/black"
-                android:textSize="@dimen/basic_text_size" />
+                android:text="@string/share_app" />
 
             <ImageView
+                style="@style/SettingsComponentIconStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:layout_marginTop="22dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="21dp"
@@ -90,23 +81,21 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/support_frame_layout"
+            style="@style/FrameLayoutSettingsStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/SettingsComponentTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginVertical="@dimen/text_margin_vertical"
-                android:layout_marginStart="@dimen/text_margin_start"
-                android:text="@string/write_to_support"
-                android:textColor="@color/black"
-                android:textSize="@dimen/basic_text_size" />
+                android:text="@string/write_to_support" />
 
             <ImageView
+                style="@style/SettingsComponentIconStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:layout_marginTop="22.1dp"
                 android:layout_marginEnd="14dp"
                 android:layout_marginBottom="20.9dp"
@@ -114,23 +103,21 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/user_agreement_frame_layout"
+            style="@style/FrameLayoutSettingsStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                style="@style/SettingsComponentTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginVertical="@dimen/text_margin_vertical"
-                android:layout_marginStart="@dimen/text_margin_start"
-                android:text="@string/user_agreement"
-                android:textColor="@color/black"
-                android:textSize="@dimen/basic_text_size" />
+                android:text="@string/user_agreement" />
 
             <ImageView
+                style="@style/SettingsComponentIconStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="23dp"
