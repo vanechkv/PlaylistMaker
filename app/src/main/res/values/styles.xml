@@ -82,4 +82,23 @@
     <style name="SearchLinearLayoutStyle">
         <item name="android:background">@drawable/bg_search_box</item>
     </style>
+
+    <style name="TrackNameTextStyle">
+        <item name="android:layout_marginStart">@dimen/icon_button_padding</item>
+        <item name="android:layout_marginEnd">@dimen/default_padding_margin</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_track</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">@dimen/basic_text_size</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="TrackInfoTextStyle">
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_track</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textSize">@dimen/track_text_size</item>
+    </style>
 </resources>
