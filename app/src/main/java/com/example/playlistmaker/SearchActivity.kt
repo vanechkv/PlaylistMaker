@@ -97,6 +97,7 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                searchLayout.removeAllViews()
                 search()
                 true
             }
