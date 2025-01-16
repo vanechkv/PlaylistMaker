@@ -57,7 +57,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="@string/search"
-                android:inputType="text" />
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:singleLine="true" />
 
             <ImageView
                 android:id="@+id/search_close_btn"
@@ -72,9 +74,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <FrameLayout
+            android:id="@+id/search_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
