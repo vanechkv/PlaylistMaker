@@ -1,14 +1,11 @@
 package com.example.playlistmaker
 
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.Layout
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -21,7 +18,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import retrofit2.Call
 import retrofit2.Callback
@@ -74,6 +70,7 @@ class SearchActivity : AppCompatActivity() {
             searchLayout.removeAllViews()
 
             tracks.clear()
+            adapter.notifyDataSetChanged()
         }
 
         val textWatcher = object : TextWatcher {
@@ -84,6 +81,7 @@ class SearchActivity : AppCompatActivity() {
                 clearButton.visibility = clearButtonVisibility(s)
                 searchText = s?.toString()
                 tracks.clear()
+                adapter.notifyDataSetChanged()
             }
 
             override fun afterTextChanged(s: Editable?) {
