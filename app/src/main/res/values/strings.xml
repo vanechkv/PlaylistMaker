@@ -12,4 +12,8 @@
     <string name="support_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="support_email">drobitkoivan@yandex.ru</string>
     <string name="url_user_agreement">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="search_not_found">Ничего не нашлось</string>
+    <string name="internet_error">Проблемы со связью</string>
+    <string name="internet_error_explanation">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="update">Обновить</string>
 </resources>

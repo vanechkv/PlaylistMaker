@@ -106,4 +106,23 @@
     <style name="TrackComponentIconStyle">
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
+
+    <style name="ErrorButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="cornerRadius">54dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginTop">24dp</item>
+        <item name="android:backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/button_error_text_size</item>
+    </style>
+
+    <style name="ErrorTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/error_text_size</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
 </resources>
