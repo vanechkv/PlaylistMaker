@@ -22,4 +22,7 @@
     <dimen name="margin_vertical_track">6dp</dimen>
     <dimen name="margin_padding_24dp">24dp</dimen>
     <dimen name="button_radius_54dp">54dp</dimen>
+    <dimen name="switch_padding_top">21dp</dimen>
+    <dimen name="switch_padding_bottom">22dp</dimen>
+    <dimen name="switch_padding_horizontal">18dp</dimen>
 </resources>
