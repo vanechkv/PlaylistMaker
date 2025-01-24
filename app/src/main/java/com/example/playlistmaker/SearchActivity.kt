@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,18 +38,31 @@ class SearchActivity : AppCompatActivity() {
         .baseUrl(itunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
     private val itunesService = retrofit.create(ItunesApi::class.java)
 
     private val tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(tracks)
+    private var historyTracksList = ArrayList<Track>()
+
+    private var adapter = TrackAdapter(tracks) {track -> onTrackClick(track)}
+    private val adapterHistory = TrackAdapter(historyTracksList) {track -> onTrackClick(track)}
+
+    private lateinit var app: App
+    private lateinit var shredPref: SharedPreferences
+    private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
 
+        app = applicationContext as App
+
+        shredPref = getSharedPreferences(PLAYLIST_PREFERENCES, MODE_PRIVATE)
+
         searchLayout = findViewById(R.id.search_container)
+
+        val historyView =
+            LayoutInflater.from(this).inflate(R.layout.history_view, searchLayout, false)
 
         val backButton = findViewById<ImageButton>(R.id.back_button)
 
@@ -60,7 +75,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.search_edit_text)
 
         clearButton.setOnClickListener {
-            inputEditText.setText("")
+            inputEditText.text = null
 
             val inputMethodManager = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
@@ -80,8 +95,16 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
                 searchText = s?.toString()
+
                 tracks.clear()
                 adapter.notifyDataSetChanged()
+
+                if (inputEditText.hasFocus() && s?.isEmpty() == true && historyTracksList.isNotEmpty()) {
+                    adapterHistory.notifyDataSetChanged()
+                    searchLayout.addView(historyView)
+                } else {
+                    searchLayout.removeAllViews()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -95,12 +118,47 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            inputEditText.clearFocus()
+            if (actionId == EditorInfo.IME_ACTION_DONE && inputEditText.text.isNotEmpty()) {
                 searchLayout.removeAllViews()
                 search()
-                true
             }
             false
+        }
+
+        historyTracksList.addAll(createTracksListFromJson(shredPref.getString(
+            HISTORY_TRACKS_LIST_KEY, null)))
+
+        val historyRecycler =
+            historyView.findViewById<RecyclerView>(R.id.history_recycler_view)
+        historyRecycler.adapter = adapterHistory
+
+        val clearHistoryButton = historyView.findViewById<Button>(R.id.clear_history_button)
+        clearHistoryButton.setOnClickListener {
+            historyTracksList.clear()
+            shredPref.edit()
+                .remove(HISTORY_TRACKS_LIST_KEY)
+                .apply()
+            searchLayout.removeAllViews()
+        }
+
+        inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && inputEditText.text.isEmpty() && historyTracksList.isNotEmpty()) {
+                listener =
+                    SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
+                        if (key == NEW_TRACK_IN_HISTORY_KEY) {
+                            val track = sharedPreferences.getString(NEW_TRACK_IN_HISTORY_KEY, null)
+                            onTrackClick(createTrackFromJson(track))
+                            adapter.notifyItemInserted(0)
+                        }
+                    }
+
+                shredPref.registerOnSharedPreferenceChangeListener(listener)
+
+                searchLayout.addView(historyView)
+            } else {
+                searchLayout.removeAllViews()
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -108,6 +166,14 @@ class SearchActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        shredPref.edit()
+            .putString(HISTORY_TRACKS_LIST_KEY, createJsonFromTracksList(historyTracksList))
+            .apply()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -159,7 +225,6 @@ class SearchActivity : AppCompatActivity() {
 
             errorIcon.setImageResource(iconError)
 
-
             if (isButtonVisible) {
                 errorButton.visibility = View.VISIBLE
                 errorButton.setOnClickListener {
@@ -207,6 +272,40 @@ class SearchActivity : AppCompatActivity() {
                     )
                 }
             })
+    }
+
+    private fun createJsonFromTracksList(tracks: ArrayList<Track>): String {
+        return Gson().toJson(tracks)
+    }
+
+    private fun createJsonFromTrack(track: Track): String {
+        return Gson().toJson(track)
+    }
+
+
+    private fun createTrackFromJson(json: String?): Track {
+        return Gson().fromJson(json, Track::class.java)
+    }
+
+    private fun createTracksListFromJson(json: String?): ArrayList<Track> {
+        return if (json.isNullOrEmpty()) {
+            ArrayList()
+        } else {
+            val tracks = Gson().fromJson(json, Array<Track>::class.java)
+            ArrayList(tracks.toList())
+        }
+    }
+
+    private fun onTrackClick (track: Track) {
+        historyTracksList.removeIf {it.trackId == track.trackId}
+        historyTracksList.add(0, track)
+        if (historyTracksList.size > 10) {
+            historyTracksList.removeAt(historyTracksList.lastIndex)
+        }
+        adapterHistory.notifyDataSetChanged()
+        shredPref.edit()
+            .putString(NEW_TRACK_IN_HISTORY_KEY, createJsonFromTrack(track))
+            .apply()
     }
 
     companion object {

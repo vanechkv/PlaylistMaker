@@ -42,6 +42,15 @@
         <item name="android:layout_gravity">end</item>
     </style>
 
+    <style name="SwitchSettingStyle">
+        <item name="android:layout_gravity">end</item>
+        <item name="android:paddingTop">@dimen/switch_padding_top</item>
+        <item name="android:paddingBottom">@dimen/switch_padding_bottom</item>
+        <item name="android:paddingHorizontal">@dimen/switch_padding_horizontal</item>
+        <item name="thumbTint">@color/switch_thumb_color</item>
+        <item name="trackTint">@color/switch_track_color</item>
+    </style>
+
     <style name="MainButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_marginBottom">@dimen/default_padding_margin</item>
         <item name="android:backgroundTint">?attr/colorPrimary</item>

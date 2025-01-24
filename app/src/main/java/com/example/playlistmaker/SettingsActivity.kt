@@ -3,19 +3,24 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var app: App
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
+
+        app = applicationContext as App
 
         val backButton = findViewById<ImageButton>(R.id.back_button)
 
@@ -61,6 +66,14 @@ class SettingsActivity : AppCompatActivity() {
                 data = Uri.parse(urlUserAgreement)
             }
             startActivity(userAgreementIntent)
+        }
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
+
+        themeSwitcher.isChecked = app.darkTheme
+
+        themeSwitcher.setOnCheckedChangeListener { _, checked ->
+            app.switchTheme(checked)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
