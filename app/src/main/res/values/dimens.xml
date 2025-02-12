@@ -5,6 +5,7 @@
     <dimen name="track_text_size">11sp</dimen>
     <dimen name="error_text_size">19sp</dimen>
     <dimen name="button_error_text_size">14sp</dimen>
+    <dimen name="track_info_text_size">13sp</dimen>
     <dimen name="margin_layout">4dp</dimen>
     <dimen name="default_padding_margin">16dp</dimen>
     <dimen name="icon_button_padding">8dp</dimen>
@@ -25,4 +26,7 @@
     <dimen name="switch_padding_top">21dp</dimen>
     <dimen name="switch_padding_bottom">22dp</dimen>
     <dimen name="switch_padding_horizontal">18dp</dimen>
+    <dimen name="margin_padding_20dp">20dp</dimen>
+    <dimen name="margin_padding_39dp">39dp</dimen>
+    <dimen name="margin_padding_17dp">17dp</dimen>
 </resources>

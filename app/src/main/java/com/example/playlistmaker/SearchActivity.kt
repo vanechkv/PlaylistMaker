@@ -147,9 +147,12 @@ class SearchActivity : AppCompatActivity() {
                 listener =
                     SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
                         if (key == NEW_TRACK_IN_HISTORY_KEY) {
-                            val track = sharedPreferences.getString(NEW_TRACK_IN_HISTORY_KEY, null)
-                            onTrackClick(createTrackFromJson(track))
-                            adapter.notifyItemInserted(0)
+                            val trackJson = sharedPreferences.getString(NEW_TRACK_IN_HISTORY_KEY, null)
+                            val track = createTrackFromJson(trackJson)
+                            if (!historyTracksList.contains(track)) {
+                                historyTracksList.add(0, track)
+                                adapterHistory.notifyItemInserted(0)
+                            }
                         }
                     }
 
@@ -306,6 +309,9 @@ class SearchActivity : AppCompatActivity() {
         shredPref.edit()
             .putString(NEW_TRACK_IN_HISTORY_KEY, createJsonFromTrack(track))
             .apply()
+
+        val trackIntent = Intent(this, AudioPlayerActivity::class.java)
+        startActivity(trackIntent)
     }
 
     companion object {
