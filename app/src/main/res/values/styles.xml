@@ -129,4 +129,41 @@
         <item name="android:textSize">@dimen/error_text_size</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
+
+    <style name="TrackTitleTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="layout_constrainedWidth">true</item>
+    </style>
+
+    <style name="TrackArtistTextStyle">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/button_error_text_size</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="layout_constrainedWidth">true</item>
+    </style>
+
+    <style name="TitleMoreInfoStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/track_info_text_size</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/agate_gray</item>
+    </style>
+
+    <style name="TrackMoreInfoStyle">
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/track_info_text_size</item>
+        <item name="android:layout_marginStart">@dimen/text_margin_start</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="layout_constrainedWidth">true</item>
+        <item name="android:gravity">end</item>
+    </style>
 </resources>
