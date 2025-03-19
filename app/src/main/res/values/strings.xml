@@ -23,5 +23,5 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
-    <string name="time_0_30">0:30</string>
+    <string name="time_00_00">00:00</string>
 </resources>

@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_layout"
             android:gravity="center"
-            android:text="@string/time_0_30"
+            android:text="@string/time_00_00"
             app:layout_constraintEnd_toEndOf="@id/button_play"
             app:layout_constraintStart_toStartOf="@id/button_play"
             app:layout_constraintTop_toBottomOf="@id/button_play" />

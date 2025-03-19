@@ -1,7 +1,9 @@
 package com.example.playlistmaker
 
-import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +28,13 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var country: TextView
     private lateinit var artworkUrl100: ImageView
     private lateinit var sdf: SimpleDateFormat
+    private var mediaPlayer = MediaPlayer()
+    private var playerState = STATE_DEFAULT
+    private lateinit var urlTrack: String
+    private lateinit var playButton: ImageView
+    private val handler = Handler(Looper.getMainLooper())
+    private val runnable = Runnable { createUpdateTimer() }
+    private lateinit var timer: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +54,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         genre = findViewById(R.id.track_genre)
         country = findViewById(R.id.track_country)
         artworkUrl100 = findViewById(R.id.cover)
+        playButton = findViewById(R.id.button_play)
+        timer = findViewById(R.id.listening_time)
 
         sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
 
@@ -52,6 +63,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         val jsonTrack = shredPref.getString(NEW_TRACK_IN_HISTORY_KEY, null)
         val track = createTrackFromJson(jsonTrack)
+
+        urlTrack = track.previewUrl
 
         trackName.text = track.trackName
         artistName.text = track.artistName
@@ -71,18 +84,100 @@ class AudioPlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        val playButton = findViewById<ImageView>(R.id.button_play)
+        preparePlayer()
+
         playButton.setOnClickListener {
-            playButton.setImageResource(R.drawable.vector_pause)
+            playbackControl()
         }
 
         val addFavoriteButton = findViewById<ImageView>(R.id.button_add_to_favorite)
         addFavoriteButton.setOnClickListener {
             addFavoriteButton.setImageResource(R.drawable.button_added_to_favorite)
         }
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
     }
 
     private fun createTrackFromJson(json: String?): Track {
         return Gson().fromJson(json, Track::class.java)
+    }
+
+    private fun preparePlayer() {
+        mediaPlayer.setDataSource(urlTrack)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playButton.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            playButton.setImageResource(R.drawable.vector_play)
+            playerState = STATE_PREPARED
+        }
+    }
+
+    private fun startPlayer() {
+        mediaPlayer.start()
+        playButton.setImageResource(R.drawable.vector_pause)
+        playerState = STATE_PLAYING
+        startTimer()
+    }
+
+    private fun pausePlayer() {
+        mediaPlayer.pause()
+        playButton.setImageResource(R.drawable.vector_play)
+        playerState = STATE_PAUSED
+        stopTimer()
+    }
+
+    private fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    private fun startTimer() {
+        handler.post(runnable)
+    }
+
+    private fun stopTimer() {
+        handler.removeCallbacks(runnable)
+    }
+
+    private fun createUpdateTimer() {
+        when(playerState) {
+            STATE_PLAYING -> {
+                timer.text = SimpleDateFormat(
+                    "mm:ss",
+                    Locale.getDefault()
+                ).format(mediaPlayer.currentPosition)
+                handler.postDelayed(runnable, DELAY_UPDATE_TRACK_TIME)
+            }
+            STATE_PREPARED -> {
+                timer.setText(R.string.time_00_00)
+            }
+        }
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY_UPDATE_TRACK_TIME = 300L
     }
 }

@@ -82,6 +82,15 @@
             android:id="@+id/search_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="@dimen/progress_bar_size"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_marginTop="148dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/klein_blue"
+            android:visibility="gone" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
