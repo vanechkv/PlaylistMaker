@@ -29,4 +29,5 @@
     <dimen name="margin_padding_20dp">20dp</dimen>
     <dimen name="margin_padding_39dp">39dp</dimen>
     <dimen name="margin_padding_17dp">17dp</dimen>
+    <dimen name="progress_bar_size">44dp</dimen>
 </resources>

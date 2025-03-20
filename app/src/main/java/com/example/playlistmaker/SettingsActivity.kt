@@ -68,18 +68,22 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(userAgreementIntent)
         }
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.theme_switcher)
 
         themeSwitcher.isChecked = app.darkTheme
 
         themeSwitcher.setOnCheckedChangeListener { _, checked ->
             app.switchTheme(checked)
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
         }
     }
 }

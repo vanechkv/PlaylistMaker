@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +36,7 @@ class SearchActivity : AppCompatActivity() {
     private var searchText: String? = null
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var searchLayout: FrameLayout
+    private lateinit var progressBar: ProgressBar
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -43,12 +47,15 @@ class SearchActivity : AppCompatActivity() {
     private val tracks = ArrayList<Track>()
     private var historyTracksList = ArrayList<Track>()
 
-    private var adapter = TrackAdapter(tracks) {track -> onTrackClick(track)}
-    private val adapterHistory = TrackAdapter(historyTracksList) {track -> onTrackClick(track)}
+    private var adapter = TrackAdapter(tracks) { track -> onTrackClick(track) }
+    private val adapterHistory = TrackAdapter(historyTracksList) { track -> onTrackClick(track) }
 
     private lateinit var app: App
     private lateinit var shredPref: SharedPreferences
     private lateinit var listener: SharedPreferences.OnSharedPreferenceChangeListener
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +67,8 @@ class SearchActivity : AppCompatActivity() {
         shredPref = getSharedPreferences(PLAYLIST_PREFERENCES, MODE_PRIVATE)
 
         searchLayout = findViewById(R.id.search_container)
+
+        progressBar = findViewById(R.id.progress_bar)
 
         val historyView =
             LayoutInflater.from(this).inflate(R.layout.history_view, searchLayout, false)
@@ -93,6 +102,7 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchDebounce()
                 clearButton.visibility = clearButtonVisibility(s)
                 searchText = s?.toString()
 
@@ -117,17 +127,13 @@ class SearchActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.search_recycler_view)
         recyclerView.adapter = adapter
 
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            inputEditText.clearFocus()
-            if (actionId == EditorInfo.IME_ACTION_DONE && inputEditText.text.isNotEmpty()) {
-                searchLayout.removeAllViews()
-                search()
-            }
-            false
-        }
-
-        historyTracksList.addAll(createTracksListFromJson(shredPref.getString(
-            HISTORY_TRACKS_LIST_KEY, null)))
+        historyTracksList.addAll(
+            createTracksListFromJson(
+                shredPref.getString(
+                    HISTORY_TRACKS_LIST_KEY, null
+                )
+            )
+        )
 
         val historyRecycler =
             historyView.findViewById<RecyclerView>(R.id.history_recycler_view)
@@ -147,7 +153,8 @@ class SearchActivity : AppCompatActivity() {
                 listener =
                     SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
                         if (key == NEW_TRACK_IN_HISTORY_KEY) {
-                            val trackJson = sharedPreferences.getString(NEW_TRACK_IN_HISTORY_KEY, null)
+                            val trackJson =
+                                sharedPreferences.getString(NEW_TRACK_IN_HISTORY_KEY, null)
                             val track = createTrackFromJson(trackJson)
                             if (!historyTracksList.contains(track)) {
                                 historyTracksList.add(0, track)
@@ -242,39 +249,45 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun search() {
-        itunesService.search(inputEditText.text.toString())
-            .enqueue(object : Callback<TracksResponse> {
-                override fun onResponse(
-                    call: Call<TracksResponse>,
-                    response: Response<TracksResponse>
-                ) {
-                    when (response.code()) {
-                        200 -> {
-                            if (response.body()?.tracks?.isNotEmpty() == true) {
-                                tracks.clear()
-                                tracks.addAll(response.body()?.tracks!!)
-                                adapter.notifyDataSetChanged()
-                            } else {
-                                showError(
-                                    getString(R.string.search_not_found),
-                                    null,
-                                    R.drawable.vector_search_not_found,
-                                    false
-                                )
+        if (inputEditText.text.isNotEmpty()) {
+            progressBar.visibility = View.VISIBLE
+
+            itunesService.search(inputEditText.text.toString())
+                .enqueue(object : Callback<TracksResponse> {
+                    override fun onResponse(
+                        call: Call<TracksResponse>,
+                        response: Response<TracksResponse>
+                    ) {
+                        progressBar.visibility = View.GONE
+                        when (response.code()) {
+                            200 -> {
+                                if (response.body()?.tracks?.isNotEmpty() == true) {
+                                    tracks.clear()
+                                    tracks.addAll(response.body()?.tracks!!)
+                                    adapter.notifyDataSetChanged()
+                                } else {
+                                    showError(
+                                        getString(R.string.search_not_found),
+                                        null,
+                                        R.drawable.vector_search_not_found,
+                                        false
+                                    )
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    showError(
-                        getString(R.string.internet_error),
-                        getString(R.string.internet_error_explanation),
-                        R.drawable.vector_internet,
-                        true
-                    )
-                }
-            })
+                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        progressBar.visibility = View.GONE
+                        showError(
+                            getString(R.string.internet_error),
+                            getString(R.string.internet_error_explanation),
+                            R.drawable.vector_internet,
+                            true
+                        )
+                    }
+                })
+        }
     }
 
     private fun createJsonFromTracksList(tracks: ArrayList<Track>): String {
@@ -299,8 +312,8 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun onTrackClick (track: Track) {
-        historyTracksList.removeIf {it.trackId == track.trackId}
+    private fun onTrackClick(track: Track) {
+        historyTracksList.removeIf { it.trackId == track.trackId }
         historyTracksList.add(0, track)
         if (historyTracksList.size > 10) {
             historyTracksList.removeAt(historyTracksList.lastIndex)
@@ -314,7 +327,13 @@ class SearchActivity : AppCompatActivity() {
         startActivity(trackIntent)
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
