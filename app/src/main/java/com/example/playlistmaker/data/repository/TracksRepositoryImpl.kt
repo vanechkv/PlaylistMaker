@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.network
+package com.example.playlistmaker.data.repository
 
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.TracksSearchRequest

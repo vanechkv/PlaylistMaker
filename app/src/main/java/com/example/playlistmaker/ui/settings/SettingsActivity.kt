@@ -17,7 +17,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
-    private val settingsInteractor by lazy { Creator.provideSettingsInteractor(this) }
+    private val settingsInteractor by lazy { Creator.provideSettingsInteractor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

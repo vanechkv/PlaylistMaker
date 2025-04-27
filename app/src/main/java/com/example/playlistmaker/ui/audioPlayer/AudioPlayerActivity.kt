@@ -42,7 +42,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private val runnable = Runnable { createUpdateTimer() }
     private lateinit var timer: TextView
 
-    private val trackInteractor by lazy { Creator.provideTracksInteractor(this) }
+    private val trackInteractor by lazy { Creator.provideTracksInteractor() }
     private val audioPlayerInteractor by lazy { Creator.provideAudioPlayerInteractor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {

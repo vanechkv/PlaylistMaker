@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.network
+package com.example.playlistmaker.data.repository
 
 import com.example.playlistmaker.data.storage.SettingHistoryStorage
 import com.example.playlistmaker.domain.api.SettingsRepository

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.data.network
+package com.example.playlistmaker.data.repository
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.Constans.STATE_DEFAULT

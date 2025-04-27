@@ -47,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
 
-    private val trackInteractor by lazy { Creator.provideTracksInteractor(this) }
+    private val trackInteractor by lazy { Creator.provideTracksInteractor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
