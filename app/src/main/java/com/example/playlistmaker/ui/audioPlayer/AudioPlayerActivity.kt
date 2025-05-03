@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.audioPlayer
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -13,6 +13,14 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Constans.DELAY_UPDATE_TRACK_TIME
+import com.example.playlistmaker.Constans.STATE_DEFAULT
+import com.example.playlistmaker.Constans.STATE_PAUSED
+import com.example.playlistmaker.Constans.STATE_PLAYING
+import com.example.playlistmaker.Constans.STATE_PREPARED
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.models.Track
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -28,13 +36,14 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var country: TextView
     private lateinit var artworkUrl100: ImageView
     private lateinit var sdf: SimpleDateFormat
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
     private lateinit var urlTrack: String
     private lateinit var playButton: ImageView
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = Runnable { createUpdateTimer() }
     private lateinit var timer: TextView
+
+    private val trackInteractor by lazy { Creator.provideTracksInteractor() }
+    private val audioPlayerInteractor by lazy { Creator.provideAudioPlayerInteractor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,10 +68,7 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
 
-        val shredPref = getSharedPreferences(PLAYLIST_PREFERENCES, MODE_PRIVATE)
-
-        val jsonTrack = shredPref.getString(NEW_TRACK_IN_HISTORY_KEY, null)
-        val track = createTrackFromJson(jsonTrack)
+        val track = trackInteractor.getTrack()
 
         urlTrack = track.previewUrl
 
@@ -70,11 +76,11 @@ class AudioPlayerActivity : AppCompatActivity() {
         artistName.text = track.artistName
         duration.text = sdf.format(track.trackTimeMillis)
         album.text = track.collectionName ?: "-"
-        year.text = track.getReleaseYear() ?: "-"
+        year.text = track.releaseDate ?: "-"
         genre.text = track.primaryGenreName ?: "-"
         country.text = track.country ?: "-"
         Glide.with(this)
-            .load(track.getCoverArtwork())
+            .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
             .transform(CenterCrop(), RoundedCorners(8))
             .into(artworkUrl100)
@@ -99,47 +105,39 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        audioPlayerInteractor.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
-    }
-
-    private fun createTrackFromJson(json: String?): Track {
-        return Gson().fromJson(json, Track::class.java)
+        audioPlayerInteractor.releasePlayer()
     }
 
     private fun preparePlayer() {
-        mediaPlayer.setDataSource(urlTrack)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playButton.setImageResource(R.drawable.vector_play)
-            playerState = STATE_PREPARED
-        }
+        audioPlayerInteractor.preparePlayer(urlTrack,
+            {
+                playButton.isEnabled = true
+            },
+            {
+                playButton.setImageResource(R.drawable.vector_play)
+            })
+
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        audioPlayerInteractor.startPlayer()
         playButton.setImageResource(R.drawable.vector_pause)
-        playerState = STATE_PLAYING
         startTimer()
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        audioPlayerInteractor.pausePlayer()
         playButton.setImageResource(R.drawable.vector_play)
-        playerState = STATE_PAUSED
         stopTimer()
     }
 
     private fun playbackControl() {
-        when (playerState) {
+        when (audioPlayerInteractor.getPlayerState()) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -159,25 +157,18 @@ class AudioPlayerActivity : AppCompatActivity() {
     }
 
     private fun createUpdateTimer() {
-        when(playerState) {
+        when (audioPlayerInteractor.getPlayerState()) {
             STATE_PLAYING -> {
                 timer.text = SimpleDateFormat(
                     "mm:ss",
                     Locale.getDefault()
-                ).format(mediaPlayer.currentPosition)
+                ).format(audioPlayerInteractor.getCurrentPosition())
                 handler.postDelayed(runnable, DELAY_UPDATE_TRACK_TIME)
             }
+
             STATE_PREPARED -> {
                 timer.setText(R.string.time_00_00)
             }
         }
-    }
-
-    companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
-        private const val DELAY_UPDATE_TRACK_TIME = 300L
     }
 }
