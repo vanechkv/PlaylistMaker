@@ -7,11 +7,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.constants.Constants.SEARCH_TEXT
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.databinding.ErrorViewBinding
@@ -22,9 +21,7 @@ import com.example.playlistmaker.search.domain.models.TracksState
 
 class SearchActivity : AppCompatActivity() {
 
-    private val viewModel: SearchViewModel by viewModels<SearchViewModel> {
-        SearchViewModel.getViewModelFactory()
-    }
+    private val viewModel: SearchViewModel by viewModel()
 
     private var adapter = TrackAdapter(arrayListOf()) {
         viewModel.onTrackClick(it)
@@ -205,21 +202,29 @@ class SearchActivity : AppCompatActivity() {
             }
 
             is TracksState.Empty -> {
-                showError(state.message, null, R.drawable.vector_search_not_found, false)
+                showError(getString(state.message), null, R.drawable.vector_search_not_found, false)
             }
 
             is TracksState.Error -> {
                 showError(
-                    state.errorMessage,
+                    getString(state.errorMessage),
                     getString(R.string.internet_error_explanation),
                     R.drawable.vector_internet,
                     true
                 )
+            }
+
+            is TracksState.SearchHistory -> {
+                adapterHistory.updateTracks(state.history)
             }
         }
     }
 
     private fun openPlayer() {
         startActivity(Intent(this, AudioPlayerActivity::class.java))
+    }
+
+    companion object {
+        private const val SEARCH_TEXT = "SEARCH_TEXT"
     }
 }

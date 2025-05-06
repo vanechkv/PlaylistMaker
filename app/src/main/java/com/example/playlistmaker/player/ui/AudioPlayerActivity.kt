@@ -1,23 +1,14 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.constants.Constants.DELAY_UPDATE_TRACK_TIME
-import com.example.playlistmaker.constants.Constants.STATE_PAUSED
-import com.example.playlistmaker.constants.Constants.STATE_PLAYING
-import com.example.playlistmaker.constants.Constants.STATE_PREPARED
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityAudioplayerBinding
 import java.text.SimpleDateFormat
@@ -25,9 +16,7 @@ import java.util.Locale
 
 class AudioPlayerActivity : AppCompatActivity() {
 
-    private val viewModel: AudioPlayerViewModel by viewModels<AudioPlayerViewModel> {
-        AudioPlayerViewModel.getViewModelFactory()
-    }
+    private val viewModel: AudioPlayerViewModel by viewModel()
 
     private lateinit var sdf: SimpleDateFormat
 
