@@ -1,30 +1,19 @@
 package com.example.playlistmaker.player.ui
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.R
-import com.example.playlistmaker.constants.Constants.DELAY_UPDATE_TRACK_TIME
-import com.example.playlistmaker.constants.Constants.STATE_PAUSED
-import com.example.playlistmaker.constants.Constants.STATE_PLAYING
-import com.example.playlistmaker.constants.Constants.STATE_PREPARED
-import com.example.playlistmaker.creator.Creator
+import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.player.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class AudioPlayerViewModel(
-    application: Application,
     private val tracksInteractor: TracksInteractor,
     private val audioPlayerInteractor: AudioPlayerInteractor
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val isPlayingLiveData = MutableLiveData<Boolean>()
     fun observeIsPlaying(): LiveData<Boolean> = isPlayingLiveData
@@ -49,7 +38,7 @@ class AudioPlayerViewModel(
             }
 
             STATE_PREPARED -> {
-                currentPositionLiveData.postValue(getApplication<Application>().getString(R.string.time_00_00))
+                currentPositionLiveData.postValue("00:00")
             }
         }
     }
@@ -63,7 +52,7 @@ class AudioPlayerViewModel(
             },
             {
                 isPlayingLiveData.postValue(false)
-                currentPositionLiveData.postValue(getApplication<Application>().getString(R.string.time_00_00))
+                currentPositionLiveData.postValue("00:00")
             })
 
     }
@@ -106,14 +95,9 @@ class AudioPlayerViewModel(
     }
 
     companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                AudioPlayerViewModel(
-                    application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application,
-                    Creator.provideTracksInteractor(),
-                    Creator.provideAudioPlayerInteractor()
-                )
-            }
-        }
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+        private const val DELAY_UPDATE_TRACK_TIME = 300L
     }
 }

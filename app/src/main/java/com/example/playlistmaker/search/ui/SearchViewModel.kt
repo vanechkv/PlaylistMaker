@@ -1,26 +1,17 @@
 package com.example.playlistmaker.search.ui
 
-import android.app.Application
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.playlistmaker.R
-import com.example.playlistmaker.constants.Constants.SEARCH_DEBOUNCE_DELAY
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
 
-class SearchViewModel(application: Application, private val tracksInteractor: TracksInteractor) :
-    AndroidViewModel(application) {
+class SearchViewModel(private val tracksInteractor: TracksInteractor) :
+    ViewModel() {
 
     private var searchText: String? = null
 
@@ -76,7 +67,7 @@ class SearchViewModel(application: Application, private val tracksInteractor: Tr
                             errorMessage != null -> {
                                 renderState(
                                     TracksState.Error(
-                                        errorMessage = getApplication<Application>().getString(R.string.internet_error)
+                                        errorMessage = R.string.internet_error
                                     )
                                 )
                             }
@@ -84,7 +75,7 @@ class SearchViewModel(application: Application, private val tracksInteractor: Tr
                             tracks.isEmpty() -> {
                                 renderState(
                                     TracksState.Empty(
-                                        message = getApplication<Application>().getString(R.string.search_not_found)
+                                        message = R.string.search_not_found
                                     )
                                 )
                             }
@@ -112,7 +103,7 @@ class SearchViewModel(application: Application, private val tracksInteractor: Tr
         searchRunnable?.let { handler.removeCallbacks(it) }
 
         if (changedText.isBlank()) {
-            renderState(TracksState.Empty(""))
+            renderState(TracksState.SearchHistory(historyTracksList))
             return
         }
 
@@ -122,13 +113,6 @@ class SearchViewModel(application: Application, private val tracksInteractor: Tr
     }
 
     companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                SearchViewModel(
-                    application = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application,
-                    Creator.provideTracksInteractor()
-                )
-            }
-        }
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

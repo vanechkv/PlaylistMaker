@@ -2,9 +2,12 @@ package com.example.playlistmaker.settings.data.storage
 
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.constants.Constants.DARK_MODE_KEY
 
 class SettingHistoryStorage(private val shredPref: SharedPreferences) {
+
+    companion object {
+        private const val DARK_MODE_KEY = "key_for_dark_mode"
+    }
 
     fun isDarkTheme(): Boolean {
         return shredPref.getBoolean(DARK_MODE_KEY, false)

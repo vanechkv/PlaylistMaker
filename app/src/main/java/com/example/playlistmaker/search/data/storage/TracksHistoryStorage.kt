@@ -1,14 +1,18 @@
 package com.example.playlistmaker.search.data.storage
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.constants.Constants.HISTORY_TRACKS_LIST_KEY
-import com.example.playlistmaker.constants.Constants.NEW_TRACK_IN_HISTORY_KEY
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 
 class TracksHistoryStorage(
-    private val shredPref: SharedPreferences
+    private val shredPref: SharedPreferences,
+    private val gson: Gson
 ) {
+    companion object {
+        private const val HISTORY_TRACKS_LIST_KEY = "key_history_tracks_list"
+        private const val NEW_TRACK_IN_HISTORY_KEY = "key_new_history_track_in_history"
+    }
+
     fun saveTrack(track: Track, historyTracksList: ArrayList<Track>) {
         historyTracksList.removeIf { it.trackId == track.trackId }
         historyTracksList.add(0, track)
@@ -46,23 +50,23 @@ class TracksHistoryStorage(
     }
 
     private fun createJsonFromTracksList(tracks: ArrayList<Track>): String {
-        return Gson().toJson(tracks)
+        return gson.toJson(tracks)
     }
 
     private fun createJsonFromTrack(track: Track): String {
-        return Gson().toJson(track)
+        return gson.toJson(track)
     }
 
 
     private fun createTrackFromJson(json: String?): Track {
-        return Gson().fromJson(json, Track::class.java)
+        return gson.fromJson(json, Track::class.java)
     }
 
     private fun createTracksListFromJson(json: String?): ArrayList<Track> {
         return if (json.isNullOrEmpty()) {
             ArrayList()
         } else {
-            val tracks = Gson().fromJson(json, Array<Track>::class.java)
+            val tracks = gson.fromJson(json, Array<Track>::class.java)
             ArrayList(tracks.toList())
         }
     }

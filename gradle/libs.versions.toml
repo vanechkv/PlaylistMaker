@@ -22,8 +22,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 glide = { module = "com.github.bumptech.glide:glide", version = "4.16.0" }
 gson = { module = "com.google.code.gson:gson", version = "2.11.0" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version = "2.11.0" }
-converter = {module = "com.squareup.retrofit2:converter-gson", version = "2.11.0"}
-
+converter = { module = "com.squareup.retrofit2:converter-gson", version = "2.11.0" }
+koin = { module = "io.insert-koin:koin-android", version = "3.3.0" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,15 +1,17 @@
 package com.example.playlistmaker.player.data.repository
 
 import android.media.MediaPlayer
-import com.example.playlistmaker.constants.Constants.STATE_DEFAULT
-import com.example.playlistmaker.constants.Constants.STATE_PAUSED
-import com.example.playlistmaker.constants.Constants.STATE_PLAYING
-import com.example.playlistmaker.constants.Constants.STATE_PREPARED
 import com.example.playlistmaker.player.domain.api.AudioPlayerRepository
 
-class AudioPlayerRepositoryImpl : AudioPlayerRepository {
+class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
 
-    private val mediaPlayer = MediaPlayer()
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
+
     private var playerState = STATE_DEFAULT
 
     override fun preparePlayer(urlTrack: String, prepared: () -> Unit, completion: () -> Unit) {
@@ -36,7 +38,7 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
     }
 
     override fun releasePlayer() {
-        mediaPlayer.release()
+        mediaPlayer.reset()
     }
 
     override fun getCurrentPosition(): Int {
