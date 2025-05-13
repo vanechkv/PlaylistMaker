@@ -177,6 +177,7 @@
         <item name="itemTextColor">@color/bottom_nav_selector</item>
         <item name="itemIconTint">@color/bottom_nav_selector</item>
         <item name="elevation">@dimen/all_free_space</item>
+        <item name="itemRippleColor">@null</item>
         <item name="itemTextAppearanceActive">@style/TextBottomNavMenuStyle</item>
         <item name="itemTextAppearanceInactive">@style/TextBottomNavMenuStyle</item>
     </style>

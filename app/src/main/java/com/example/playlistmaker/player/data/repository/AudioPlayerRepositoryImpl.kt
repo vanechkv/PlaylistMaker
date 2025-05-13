@@ -14,7 +14,7 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
 
     private var playerState = STATE_DEFAULT
 
-    override fun preparePlayer(urlTrack: String, prepared: () -> Unit, completion: () -> Unit) {
+    override fun preparePlayer(urlTrack: String?, prepared: () -> Unit, completion: () -> Unit) {
         mediaPlayer.setDataSource(urlTrack)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
