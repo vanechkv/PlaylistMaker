@@ -166,4 +166,12 @@
         <item name="layout_constrainedWidth">true</item>
         <item name="android:gravity">end</item>
     </style>
+
+    <style name="TabPlaylistStyle">
+        <item name="tabIndicatorColor">?attr/colorOnPrimary</item>
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabTextColor">?attr/colorOnPrimary</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
 </resources>
