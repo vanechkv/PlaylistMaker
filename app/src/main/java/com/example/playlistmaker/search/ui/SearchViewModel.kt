@@ -10,9 +10,7 @@ import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
 
-class SearchViewModel(private val tracksInteractor: TracksInteractor) :
-    ViewModel() {
-
+class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
     private var searchText: String? = null
 
     private val handler = Handler(Looper.getMainLooper())

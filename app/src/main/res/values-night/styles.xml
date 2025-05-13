@@ -171,4 +171,14 @@
         <item name="layout_constrainedWidth">true</item>
         <item name="android:gravity">end</item>
     </style>
+
+    <style name="BottomNavStyle" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="android:background">@color/graphite_black</item>
+        <item name="itemTextColor">@color/bottom_nav_selector</item>
+        <item name="itemIconTint">@color/bottom_nav_selector</item>
+        <item name="elevation">@dimen/all_free_space</item>
+        <item name="itemRippleColor">@null</item>
+        <item name="itemTextAppearanceActive">@style/TextBottomNavMenuStyle</item>
+        <item name="itemTextAppearanceInactive">@style/TextBottomNavMenuStyle</item>
+    </style>
 </resources>
