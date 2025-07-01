@@ -55,34 +55,23 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         binding.buttonPlay.setOnClickListener {
-            viewModel.playbackControl()
+            viewModel.onPlayButtonClicked()
+        }
+
+        viewModel.observePlayerState().observe(this) {
+            binding.buttonPlay.isEnabled = it.isPlayButtonEnabled
+            binding.buttonPlay.setImageResource(it.buttonImg)
+            binding.listeningTime.text = it.progress
         }
 
         binding.buttonAddToFavorite.setOnClickListener {
             binding.buttonAddToFavorite.setImageResource(R.drawable.button_added_to_favorite)
         }
 
-        viewModel.preparePlayer()
-
-        viewModel.observeIsPlaying().observe(this) { isPlaying ->
-            binding.buttonPlay.setImageResource(
-                if (isPlaying) R.drawable.vector_pause else R.drawable.vector_play
-            )
-        }
-
-        viewModel.observeCurrentPosition().observe(this) { time ->
-            binding.listeningTime.text = time
-        }
-
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.pausePlayer()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.releasePlayer()
+        viewModel.onPause()
     }
 }
