@@ -9,32 +9,50 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ErrorViewBinding
 import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.databinding.HistoryViewBinding
 import com.example.playlistmaker.search.domain.models.TracksState
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
     companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
 
         fun newInstance() = SearchFragment()
     }
 
     private val viewModel: SearchViewModel by viewModel()
 
+    private var isClickAllowed = true
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
     private var adapter = TrackAdapter(arrayListOf()) {
         viewModel.onTrackClick(it)
-        openPlayer()
+        if (clickDebounce()) openPlayer()
     }
     private val adapterHistory =
         TrackAdapter(arrayListOf()) {
             viewModel.onTrackClick(it)
-            openPlayer()
+            if (clickDebounce()) openPlayer()
         }
 
     private lateinit var binding: FragmentSearchBinding
@@ -72,9 +90,11 @@ class SearchFragment : Fragment() {
         val historyView = historyViewBinding.root
 
         binding.searchCloseBtn.setOnClickListener {
+            adapter.updateTracks(emptyList())
             binding.searchEditText.text = null
 
-            val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            val inputMethodManager =
+                requireActivity().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
 
             binding.searchEditText.clearFocus()
