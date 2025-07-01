@@ -2,7 +2,7 @@ package com.example.playlistmaker.player.domain.api
 
 interface AudioPlayerInteractor {
 
-    fun preparePlayer(urlTrack: String, prepared: () -> Unit, completion: () -> Unit)
+    fun preparePlayer(urlTrack: String?, prepared: () -> Unit, completion: () -> Unit)
 
     fun startPlayer()
 
