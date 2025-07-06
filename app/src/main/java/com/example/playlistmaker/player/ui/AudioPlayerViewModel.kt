@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.player.domain.model.PlayerState
 import com.example.playlistmaker.search.domain.api.TracksInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,13 +24,37 @@ class AudioPlayerViewModel(
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerState
 
+    private val isFavorite = MutableLiveData<Boolean>()
+    fun observeIsFavorite(): LiveData<Boolean> = isFavorite
+
     init {
         initMediaPlayer()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksInteractor.getFavoriteTracksId().collect { tracks ->
+                val track = getTrack().trackId
+                isFavorite.postValue(tracks.contains(track))
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
         releasePlayer()
+    }
+
+    fun onButtonFavoriteClick() {
+        viewModelScope.launch {
+            val track = getTrack()
+            if (isFavorite.value == true) {
+                tracksInteractor.deleteTrackFromFavorites(track)
+                track.isFavorite = false
+            } else {
+                tracksInteractor.addTrackToFavorites(track)
+                track.isFavorite = true
+            }
+            isFavorite.postValue(track.isFavorite)
+        }
     }
 
     fun onPause() {

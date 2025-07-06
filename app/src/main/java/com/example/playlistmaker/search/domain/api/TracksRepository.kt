@@ -9,6 +9,8 @@ interface TracksRepository {
 
     fun saveTrackToHistory(track: Track, historyTracksList: ArrayList<Track>)
 
+    fun saveOnlyTrack(track: Track)
+
     fun saveHistory(tracks: List<Track>)
 
     fun getTrack(): Track
@@ -16,4 +18,12 @@ interface TracksRepository {
     fun getHistory(): List<Track>
 
     fun clearHistory()
+
+    suspend fun addTrackToFavorites(track: Track)
+
+    suspend fun deleteTrackFromFavorites(track: Track)
+
+    fun getFavoriteTracks(): Flow<List<Track>>
+
+    fun getFavoriteTracksId(): Flow<List<Int>>
 }

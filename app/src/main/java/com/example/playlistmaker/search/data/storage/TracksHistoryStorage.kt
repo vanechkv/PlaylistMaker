@@ -26,6 +26,12 @@ class TracksHistoryStorage(
         saveTracks(historyTracksList)
     }
 
+    fun saveOnlyTrack(track: Track) {
+        shredPref.edit()
+            .putString(NEW_TRACK_IN_HISTORY_KEY, createJsonFromTrack(track))
+            .apply()
+    }
+
     fun getTrack(): Track {
         val json = shredPref.getString(NEW_TRACK_IN_HISTORY_KEY, null)
         return createTrackFromJson(json)

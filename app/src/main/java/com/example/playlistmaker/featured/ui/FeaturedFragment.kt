@@ -6,10 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ErrorViewBinding
 import com.example.playlistmaker.databinding.FragmentFeaturedBinding
 import com.example.playlistmaker.featured.domain.models.FeaturedState
+import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -17,6 +22,7 @@ class FeaturedFragment : Fragment() {
 
     companion object {
         private const val EMPTY_MESSAGE = "empty_message"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
 
         fun newInstance(emptyMessage: String) = FeaturedFragment().apply {
             arguments = Bundle().apply {
@@ -30,6 +36,25 @@ class FeaturedFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentFeaturedBinding
+
+    private var isClickAllowed = true
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
+    private var adapter = FeaturedAdapter(arrayListOf()) {
+        viewModel.onTrackClick(it)
+        if (clickDebounce()) openPlayer()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,11 +73,13 @@ class FeaturedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.featuredRecycler.adapter = adapter
+
         viewModel.observeState().observe(viewLifecycleOwner) {
-            when(it) {
-                is FeaturedState.Empty -> showEmpty(it.message)
-            }
+            render(it)
         }
+
+        viewModel.fillData()
     }
 
     private fun showEmpty(message: String) {
@@ -65,5 +92,21 @@ class FeaturedFragment : Fragment() {
             errorIcon.setImageResource(R.drawable.vector_search_not_found)
         }
         binding.contentLayout.addView(errorView)
+    }
+
+    private fun showContent(tracks: List<Track>) {
+        adapter.updateTracks(tracks)
+    }
+
+    private fun render(state: FeaturedState) {
+        when (state) {
+            is FeaturedState.Empty -> showEmpty(state.message)
+            is FeaturedState.Content -> showContent(state.tracks)
+            is FeaturedState.Loading -> {}
+        }
+    }
+
+    private fun openPlayer() {
+        findNavController().navigate(R.id.action_playlistFragment_to_audioPlayerActivity)
     }
 }

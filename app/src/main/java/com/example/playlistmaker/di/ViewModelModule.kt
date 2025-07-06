@@ -23,7 +23,7 @@ val viewModelModule = module {
     }
 
     viewModel { (message: String) ->
-        FeaturedViewModel(message)
+        FeaturedViewModel(message, get())
     }
 
     viewModel { (message: String) ->

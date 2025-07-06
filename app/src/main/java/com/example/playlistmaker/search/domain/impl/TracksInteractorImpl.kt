@@ -28,6 +28,10 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
         repository.saveTrackToHistory(track, historyTracksList)
     }
 
+    override fun saveOnlyTrack(track: Track) {
+        repository.saveOnlyTrack(track)
+    }
+
     override fun saveHistory(tracks: List<Track>) {
         repository.saveHistory(tracks)
     }
@@ -42,5 +46,21 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
 
     override fun clearHistory() {
         repository.clearHistory()
+    }
+
+    override suspend fun addTrackToFavorites(track: Track) {
+        repository.addTrackToFavorites(track)
+    }
+
+    override suspend fun deleteTrackFromFavorites(track: Track) {
+        repository.deleteTrackFromFavorites(track)
+    }
+
+    override fun getFavoriteTracks(): Flow<List<Track>> {
+        return repository.getFavoriteTracks()
+    }
+
+    override fun getFavoriteTracksId(): Flow<List<Int>> {
+        return repository.getFavoriteTracksId()
     }
 }

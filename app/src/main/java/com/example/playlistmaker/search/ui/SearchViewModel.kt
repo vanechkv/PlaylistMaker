@@ -8,6 +8,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.domain.models.TracksState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,7 +50,7 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         if (newSearchText.isNotEmpty()) {
             renderState(TracksState.Loading)
 
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 tracksInteractor
                     .searchTrack(newSearchText)
                     .collect { pair ->
