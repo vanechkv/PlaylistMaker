@@ -10,9 +10,10 @@ import com.example.playlistmaker.search.data.storage.TracksHistoryStorage
 import com.example.playlistmaker.search.domain.api.TracksRepository
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -21,7 +22,7 @@ class TracksRepositoryImpl(
     private val trackDbConvertor: TrackDbConvertor
 ) : TracksRepository {
 
-    override fun searchTracks(expression: String): Flow<Resource<List<Track>>>  = flow {
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(expression))
         when (response.resultCode) {
             -1 -> {
@@ -85,8 +86,9 @@ class TracksRepositoryImpl(
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        val tracks = appDatabase.trackDao().getAllTrack()
-        emit(convertFromTrackEntity(tracks))
+        appDatabase.trackDao().getAllTrack().collect { tracks ->
+            emit(convertFromTrackEntity(tracks))
+        }
     }
 
     override fun getFavoriteTracksId(): Flow<List<Int>> = flow {

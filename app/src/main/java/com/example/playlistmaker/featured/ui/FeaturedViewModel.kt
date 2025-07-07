@@ -18,9 +18,9 @@ class FeaturedViewModel(
     private val stateLiveData = MutableLiveData<FeaturedState>()
     fun observeState() : LiveData<FeaturedState> = stateLiveData
 
-    fun fillData() {
+    init {
         renderState(FeaturedState.Loading)
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch (Dispatchers.IO) {
             tracksInteractor
                 .getFavoriteTracks()
                 .collect { tracks ->

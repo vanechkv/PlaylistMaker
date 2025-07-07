@@ -13,6 +13,7 @@ import com.example.playlistmaker.databinding.ErrorViewBinding
 import com.example.playlistmaker.databinding.FragmentFeaturedBinding
 import com.example.playlistmaker.featured.domain.models.FeaturedState
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.ui.TrackAdapter
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,7 +52,7 @@ class FeaturedFragment : Fragment() {
         return current
     }
 
-    private var adapter = FeaturedAdapter(arrayListOf()) {
+    private var adapter = TrackAdapter(arrayListOf()) {
         viewModel.onTrackClick(it)
         if (clickDebounce()) openPlayer()
     }
@@ -78,8 +79,6 @@ class FeaturedFragment : Fragment() {
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-
-        viewModel.fillData()
     }
 
     private fun showEmpty(message: String) {
@@ -91,10 +90,14 @@ class FeaturedFragment : Fragment() {
             errorText.text = message
             errorIcon.setImageResource(R.drawable.vector_search_not_found)
         }
+        binding.contentLayout.isVisible = true
+        binding.featuredRecycler.isVisible = false
         binding.contentLayout.addView(errorView)
     }
 
     private fun showContent(tracks: List<Track>) {
+        binding.contentLayout.isVisible = false
+        binding.featuredRecycler.isVisible = true
         adapter.updateTracks(tracks)
     }
 

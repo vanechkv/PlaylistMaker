@@ -30,7 +30,7 @@ class AudioPlayerViewModel(
     init {
         initMediaPlayer()
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             tracksInteractor.getFavoriteTracksId().collect { tracks ->
                 val track = getTrack().trackId
                 isFavorite.postValue(tracks.contains(track))
