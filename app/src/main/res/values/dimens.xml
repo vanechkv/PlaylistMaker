@@ -23,6 +23,7 @@
     <dimen name="close_icon_margin_horizontal">14dp</dimen>
     <dimen name="margin_vertical_track">6dp</dimen>
     <dimen name="margin_padding_24dp">24dp</dimen>
+    <dimen name="margin_padding_26dp">26dp</dimen>
     <dimen name="button_radius_54dp">54dp</dimen>
     <dimen name="switch_padding_top">21dp</dimen>
     <dimen name="switch_padding_bottom">22dp</dimen>
@@ -31,4 +32,9 @@
     <dimen name="margin_padding_39dp">39dp</dimen>
     <dimen name="margin_padding_17dp">17dp</dimen>
     <dimen name="progress_bar_size">44dp</dimen>
+    <dimen name="margin_padding_46dp">46dp</dimen>
+    <dimen name="margin_padding_32dp">32dp</dimen>
+    <dimen name="margin_padding_1dp">1dp</dimen>
+    <dimen name="margin_padding_42dp">42dp</dimen>
+    <dimen name="margin_padding_28dp">28dp</dimen>
 </resources>

@@ -68,4 +68,5 @@
         implementation(libs.room)
         kapt(libs.room.kapt)
         implementation(libs.room.coroutines)
+        implementation(libs.peko)
     }

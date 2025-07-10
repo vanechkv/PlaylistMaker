@@ -6,7 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.player.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.player.domain.model.PlayerState
+import com.example.playlistmaker.playlists.domain.api.PlaylistInteractor
+import com.example.playlistmaker.playlists.domain.models.PlaylistsState
 import com.example.playlistmaker.search.domain.api.TracksInteractor
+import com.example.playlistmaker.search.domain.models.Playlist
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -16,13 +20,20 @@ import java.util.Locale
 
 class AudioPlayerViewModel(
     private val tracksInteractor: TracksInteractor,
-    private val audioPlayerInteractor: AudioPlayerInteractor
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null
 
     private val playerState = MutableLiveData<PlayerState>(PlayerState.Default())
     fun observePlayerState(): LiveData<PlayerState> = playerState
+
+    private val stateLiveData = MutableLiveData<PlaylistsState>()
+    fun observeState() : LiveData<PlaylistsState> = stateLiveData
+
+    private val addStatus = MutableLiveData<Pair<String, Boolean>>()
+    fun observeAddStatus(): LiveData<Pair<String, Boolean>> = addStatus
 
     private val isFavorite = MutableLiveData<Boolean>()
     fun observeIsFavorite(): LiveData<Boolean> = isFavorite
@@ -36,6 +47,27 @@ class AudioPlayerViewModel(
                 isFavorite.postValue(tracks.contains(track))
             }
         }
+
+        renderState(PlaylistsState.Loading)
+        viewModelScope.launch (Dispatchers.IO) {
+            playlistInteractor
+                .getPlaylists()
+                .collect { playlists ->
+                    processResult(playlists)
+                }
+        }
+    }
+
+    private fun processResult(playlists: List<Playlist>) {
+        if (playlists.isEmpty()) {
+            renderState(PlaylistsState.Empty(""))
+        } else {
+            renderState(PlaylistsState.Content(playlists))
+        }
+    }
+
+    private fun renderState(state: PlaylistsState) {
+        stateLiveData.postValue(state)
     }
 
     override fun onCleared() {
@@ -54,6 +86,17 @@ class AudioPlayerViewModel(
                 track.isFavorite = true
             }
             isFavorite.postValue(track.isFavorite)
+        }
+    }
+
+    fun onPlaylistClicked(track: Track, playlist: Playlist) {
+        if (track.trackId in playlist.trackIds) {
+            addStatus.postValue(Pair(playlist.title, false))
+        } else {
+            viewModelScope.launch {
+                playlistInteractor.addTrackToPlaylist(track, playlist)
+                addStatus.postValue(Pair(playlist.title, true))
+            }
         }
     }
 

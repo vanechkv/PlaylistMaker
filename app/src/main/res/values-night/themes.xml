@@ -4,5 +4,6 @@
         <!-- Customize your dark theme here. -->
         <item name="colorPrimary">@color/graphite_black</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/white</item>
     </style>
 </resources>

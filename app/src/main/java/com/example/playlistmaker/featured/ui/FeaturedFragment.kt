@@ -110,6 +110,6 @@ class FeaturedFragment : Fragment() {
     }
 
     private fun openPlayer() {
-        findNavController().navigate(R.id.action_playlistFragment_to_audioPlayerActivity)
+        findNavController().navigate(R.id.action_playlistFragment_to_audioPlayerFragment)
     }
 }
