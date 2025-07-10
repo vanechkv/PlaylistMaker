@@ -64,10 +64,14 @@ class AudioPlayerActivity : AppCompatActivity() {
             binding.listeningTime.text = it.progress
         }
 
-        binding.buttonAddToFavorite.setOnClickListener {
-            binding.buttonAddToFavorite.setImageResource(R.drawable.button_added_to_favorite)
+        viewModel.observeIsFavorite().observe(this) { isFavorite ->
+            val icon = if (isFavorite) R.drawable.button_added_to_favorite else R.drawable.button_add_to_favorites
+            binding.buttonAddToFavorite.setImageResource(icon)
         }
 
+        binding.buttonAddToFavorite.setOnClickListener {
+            viewModel.onButtonFavoriteClick()
+        }
     }
 
     override fun onPause() {
