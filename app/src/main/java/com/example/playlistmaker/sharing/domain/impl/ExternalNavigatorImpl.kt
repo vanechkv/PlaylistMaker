@@ -37,4 +37,14 @@ class ExternalNavigatorImpl(private val context: Context): ExternalNavigator {
         }
         context.startActivity(supportIntent)
     }
+
+    override fun shareText(text: String) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.apply {
+            putExtra(Intent.EXTRA_TEXT, text)
+            setType("text/plain")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(shareIntent)
+    }
 }

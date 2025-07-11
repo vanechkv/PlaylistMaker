@@ -27,4 +27,6 @@ interface TracksRepository {
     fun getFavoriteTracks(): Flow<List<Track>>
 
     fun getFavoriteTracksId(): Flow<List<Int>>
+
+    fun getTracksInPlaylist(trackIds: List<Int>): Flow<List<Track>>
 }

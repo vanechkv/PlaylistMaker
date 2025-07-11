@@ -19,6 +19,7 @@ room_version = "2.7.2"
 navigation = "2.5.3"
 fragment = "1.5.6"
 peko = "3.0.5"
+safeargs = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,4 +52,5 @@ peko = { group = "com.markodevcic", name = "peko", version.ref = "peko" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safeargs" }
 

@@ -11,8 +11,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.utils.DisplayUtils
 
-class PlaylistsBottomSheetViewHolder(parent: ViewGroup, private val onPlaylistClick: (Playlist) -> Unit) :
+class PlaylistsBottomSheetViewHolder(
+    parent: ViewGroup,
+    private val onPlaylistClick: (Playlist) -> Unit
+) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.bottom_playlist_view, parent, false)
     ) {
@@ -31,25 +35,15 @@ class PlaylistsBottomSheetViewHolder(parent: ViewGroup, private val onPlaylistCl
     fun bind(model: Playlist) {
         currentPlaylist = model
         name.text = model.title
-        tracksCount.text = getTracksCountText(model.trackCount)
+        tracksCount.text = itemView.resources.getQuantityString(
+            R.plurals.numberOfTracksAvailable,
+            model.trackCount,
+            model.trackCount
+        )
         Glide.with(itemView)
             .load(model.imagePath)
             .placeholder(R.drawable.placeholder)
-            .transform(CenterCrop(), RoundedCorners(dpToPx(2)))
+            .transform(CenterCrop(), RoundedCorners(DisplayUtils.dpToPx(itemView.context, 2)))
             .into(artwork)
-    }
-
-    private fun dpToPx(dp: Int): Int {
-        val density = itemView.context.resources.displayMetrics.density
-        return (dp * density).toInt()
-    }
-
-    private fun getTracksCountText(count: Int): String {
-        val word = when {
-            count % 10 == 1 && count % 100 != 11 -> "трек"
-            count % 10 in 2..4 && (count % 100 !in 12..14) -> "трека"
-            else -> "треков"
-        }
-        return "$count $word"
     }
 }

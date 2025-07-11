@@ -5,6 +5,7 @@ import com.example.playlistmaker.search.data.converters.PlaylistDbConvertor
 import com.example.playlistmaker.search.data.converters.TrackDbConvertor
 import com.example.playlistmaker.search.data.db.AppDatabase
 import com.example.playlistmaker.search.data.db.entity.PlaylistEntity
+import com.example.playlistmaker.search.data.db.entity.PlaylistTrackEntity
 import com.example.playlistmaker.search.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
@@ -100,7 +101,19 @@ class TracksRepositoryImpl(
         emit(appDatabase.trackDao().getAllTrackId())
     }
 
+    override fun getTracksInPlaylist(trackIds: List<Int>): Flow<List<Track>> {
+        return appDatabase
+            .trackDao()
+            .getTracksInPlaylist(trackIds)
+            .distinctUntilChanged()
+            .map { convertFromPlaylistTrackEntity(it) }
+    }
+
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {
+        return tracks.map { track -> trackDbConvertor.map(track) }
+    }
+
+    private fun convertFromPlaylistTrackEntity(tracks: List<PlaylistTrackEntity>): List<Track> {
         return tracks.map { track -> trackDbConvertor.map(track) }
     }
 }
