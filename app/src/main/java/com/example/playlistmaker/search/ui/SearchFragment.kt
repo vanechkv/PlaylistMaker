@@ -243,6 +243,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun openPlayer() {
-        findNavController().navigate(R.id.action_searchFragment_to_audioPlayerActivity)
+        findNavController().navigate(R.id.action_searchFragment_to_audioPlayerFragment)
     }
 }

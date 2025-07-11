@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/icon_button_padding"
+    android:layout_marginStart="@dimen/icon_button_padding"
+    android:background="@null"
+    android:foreground="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/artwork"
+            android:layout_width="@dimen/all_free_space"
+            android:layout_height="@dimen/all_free_space"
+            android:src="@drawable/placeholder"
+            app:layout_constraintDimensionRatio="160:160"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/playlist_name"
+            style="@style/TrackNameTextStyle"
+            android:layout_width="@dimen/all_free_space"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/all_free_space"
+            android:layout_marginTop="@dimen/margin_layout"
+            android:layout_marginEnd="@dimen/all_free_space"
+            android:textSize="@dimen/text_size_12sp"
+            app:layout_constraintEnd_toEndOf="@id/artwork"
+            app:layout_constraintStart_toStartOf="@id/artwork"
+            app:layout_constraintTop_toBottomOf="@id/artwork"
+            tools:text="@string/app_name" />
+
+        <TextView
+            android:id="@+id/tracks_count"
+            style="@style/TrackNameTextStyle"
+            android:layout_width="@dimen/all_free_space"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/all_free_space"
+            android:layout_marginTop="@dimen/all_free_space"
+            android:layout_marginEnd="@dimen/all_free_space"
+            android:textSize="@dimen/text_size_12sp"
+            app:layout_constraintEnd_toEndOf="@id/artwork"
+            app:layout_constraintStart_toStartOf="@id/artwork"
+            app:layout_constraintTop_toBottomOf="@id/playlist_name"
+            tools:text="@string/app_name" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

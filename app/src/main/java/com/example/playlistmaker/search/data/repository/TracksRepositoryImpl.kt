@@ -1,19 +1,22 @@
 package com.example.playlistmaker.search.data.repository
 
 import com.example.playlistmaker.search.data.NetworkClient
+import com.example.playlistmaker.search.data.converters.PlaylistDbConvertor
 import com.example.playlistmaker.search.data.converters.TrackDbConvertor
 import com.example.playlistmaker.search.data.db.AppDatabase
+import com.example.playlistmaker.search.data.db.entity.PlaylistEntity
 import com.example.playlistmaker.search.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.search.data.storage.TracksHistoryStorage
 import com.example.playlistmaker.search.domain.api.TracksRepository
+import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Resource
 import com.example.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
 
 class TracksRepositoryImpl(
     private val networkClient: NetworkClient,
@@ -85,10 +88,12 @@ class TracksRepositoryImpl(
         appDatabase.trackDao().deleteTrack(trackDbConvertor.map(track))
     }
 
-    override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        appDatabase.trackDao().getAllTrack().collect { tracks ->
-            emit(convertFromTrackEntity(tracks))
-        }
+    override fun getFavoriteTracks(): Flow<List<Track>> {
+        return appDatabase
+            .trackDao()
+            .getAllTrack()
+            .distinctUntilChanged()
+            .map { convertFromTrackEntity(it) }
     }
 
     override fun getFavoriteTracksId(): Flow<List<Int>> = flow {
