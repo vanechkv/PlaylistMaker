@@ -106,7 +106,11 @@ class TracksRepositoryImpl(
             .trackDao()
             .getTracksInPlaylist(trackIds)
             .distinctUntilChanged()
-            .map { convertFromPlaylistTrackEntity(it) }
+            .map { entity ->
+                val tracks = convertFromPlaylistTrackEntity(entity)
+                tracks.sortedBy { track -> trackIds.indexOf(track.trackId) }
+
+            }
     }
 
     private fun convertFromTrackEntity(tracks: List<TrackEntity>): List<Track> {

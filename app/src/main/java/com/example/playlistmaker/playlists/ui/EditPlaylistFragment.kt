@@ -42,7 +42,7 @@ class EditPlaylistFragment : AddPlaylistFragment() {
         binding.nameEditText.setText(playlist.title)
         binding.descriptionEditText.setText(playlist.description)
         Glide.with(this)
-            .load(imagePath)
+            .load(playlist.imagePath)
             .placeholder(R.drawable.placeholder)
             .transform(CenterCrop(), RoundedCorners(DisplayUtils.dpToPx(requireContext(), 8)))
             .into(binding.coverImage)

@@ -32,13 +32,9 @@ import java.util.Locale
 
 class PlaylistInfoFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = PlaylistInfoFragment()
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-    }
-
     private val viewModel: PlaylistInfoViewModel by viewModel()
-    private lateinit var binding: FragmentPlaylistInfoBinding
+    private var _binding: FragmentPlaylistInfoBinding? = null
+    private val binding get() = _binding!!
     private val args: PlaylistInfoFragmentArgs by navArgs()
     private lateinit var sdf: SimpleDateFormat
 
@@ -72,7 +68,7 @@ class PlaylistInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistInfoBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistInfoBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -147,6 +143,16 @@ class PlaylistInfoFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun showContent(playlist: Playlist, tracks: List<Track>) {
         setImage(playlist.imagePath, binding.cover, 0)
         binding.playlistName.text = playlist.title
@@ -186,7 +192,10 @@ class PlaylistInfoFragment : Fragment() {
         }
 
         binding.edit.setOnClickListener {
-            val action = PlaylistInfoFragmentDirections.actionPlaylistInfoFragmentToEditPlaylistFragment(playlist)
+            val action =
+                PlaylistInfoFragmentDirections.actionPlaylistInfoFragmentToEditPlaylistFragment(
+                    playlist
+                )
             findNavController().navigate(action)
         }
     }
@@ -245,10 +254,10 @@ class PlaylistInfoFragment : Fragment() {
     }
 
     private fun showDeleteTrackDialog(track: Track) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Хотите удалить трек?")
-            .setNegativeButton("НЕТ") { dialog, _ -> dialog.dismiss() }
-            .setPositiveButton("ДА") { dialog, _ ->
+        MaterialAlertDialogBuilder(requireContext(), R.style.DialogStyle)
+            .setTitle(getString(R.string.want_to_delete_track))
+            .setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
                 viewModel.deleteTrack(args.playlistId, track)
                 dialog.dismiss()
             }
@@ -256,13 +265,18 @@ class PlaylistInfoFragment : Fragment() {
     }
 
     private fun showDeletePlaylistDialog(playlist: Playlist) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("""Хотите удалить плейлист "${playlist.title}"?""")
-            .setNegativeButton("НЕТ") { dialog, _ -> dialog.dismiss() }
-            .setPositiveButton("ДА") { dialog, _ ->
+        MaterialAlertDialogBuilder(requireContext(), R.style.DialogStyle)
+            .setTitle(getString(R.string.want_to_delete_playlist, playlist.title))
+            .setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
                 viewModel.deletePlaylist(playlist)
                 dialog.dismiss()
             }
             .show()
+    }
+
+    companion object {
+        fun newInstance() = PlaylistInfoFragment()
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

@@ -3,7 +3,7 @@ package com.example.playlistmaker.playlistInfo.domain.models
 import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 
-interface PlaylistState {
+sealed interface PlaylistState {
 
     object Loading : PlaylistState
 

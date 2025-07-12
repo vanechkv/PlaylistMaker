@@ -34,7 +34,7 @@ class PlaylistInfoViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             playlistInteractor.getPlaylistById(playlistId)
                 .collect { playlist ->
-                    trackInteractor.getTracksInPlaylist(playlist.trackIds)
+                    trackInteractor.getTracksInPlaylist(playlist.trackIds.reversed())
                         .collect { tracks ->
                             withContext(Dispatchers.Main) {
                                 processResult(playlist, tracks)
