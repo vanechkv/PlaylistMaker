@@ -6,21 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ErrorViewBinding
 import com.example.playlistmaker.databinding.FragmentPlaylistsBinding
-import com.example.playlistmaker.featured.domain.models.FeaturedState
+import com.example.playlistmaker.playlist.ui.PlaylistFragmentDirections
 import com.example.playlistmaker.playlists.domain.models.PlaylistsState
 import com.example.playlistmaker.search.domain.models.Playlist
-import com.example.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
 
     companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val EMPTY_MESSAGE = "empty_message"
 
         fun newInstance(emptyMessage: String) = PlaylistsFragment().apply {
@@ -36,12 +39,26 @@ class PlaylistsFragment : Fragment() {
 
     private lateinit var binding: FragmentPlaylistsBinding
 
-    private val adapter = PlaylistsAdapter(arrayListOf())
+    private var isClickAllowed = true
+
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+        }
+        return current
+    }
+
+    private val adapter = PlaylistsAdapter(arrayListOf()) {
+        if (clickDebounce()) openPlaylistInfo(it.playlistId)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
@@ -93,5 +110,10 @@ class PlaylistsFragment : Fragment() {
             is PlaylistsState.Content -> showContent(state.playlists)
             is PlaylistsState.Loading -> {}
         }
+    }
+
+    private fun openPlaylistInfo(playlistId: Long) {
+        val direction = PlaylistFragmentDirections.actionPlaylistFragmentToPlaylistInfoFragment(playlistId)
+        findNavController().navigate(direction)
     }
 }

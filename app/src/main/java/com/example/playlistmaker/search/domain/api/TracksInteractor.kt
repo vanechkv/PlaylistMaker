@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.domain.api
 
+import com.example.playlistmaker.search.data.db.entity.TrackEntity
 import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -26,4 +27,6 @@ interface TracksInteractor {
     fun getFavoriteTracks(): Flow<List<Track>>
 
     fun getFavoriteTracksId(): Flow<List<Int>>
+
+    fun getTracksInPlaylist(trackIds: List<Int>): Flow<List<Track>>
 }

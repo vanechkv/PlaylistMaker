@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -25,21 +26,22 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAddPlaylistBinding
+import com.example.playlistmaker.utils.DisplayUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 
-class AddPlaylistFragment : Fragment() {
+open class AddPlaylistFragment : Fragment() {
 
     companion object {
         fun newInstance() = AddPlaylistFragment()
     }
 
     private val viewModel: AddPlaylistViewModel by viewModel()
-    private lateinit var binding: FragmentAddPlaylistBinding
-    private var imagePath: Uri? = null
+    lateinit var binding: FragmentAddPlaylistBinding
+    var imagePath: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,10 +82,10 @@ class AddPlaylistFragment : Fragment() {
                     Glide.with(requireContext())
                         .load(uri)
                         .placeholder(R.drawable.placeholder)
-                        .transform(CenterCrop(), RoundedCorners(dpToPx(8)))
+                        .transform(CenterCrop(), RoundedCorners(DisplayUtils.dpToPx(requireContext(), 8)))
                         .into(binding.coverImage)
                     imagePath = uri
-                    binding.addImage.visibility = View.GONE
+                    binding.addImage.isVisible = false
                 } else {
                     Log.d("PhotoPicker", "No media selected")
                 }
@@ -143,10 +145,5 @@ class AddPlaylistFragment : Fragment() {
             }
             .setNegativeButton("Отмена", null)
             .show()
-    }
-
-    private fun dpToPx(dp: Int): Int {
-        val density = resources.displayMetrics.density
-        return (dp * density).toInt()
     }
 }

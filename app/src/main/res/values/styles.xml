@@ -201,4 +201,9 @@
         <item name="android:inputType">text</item>
         <item name="android:textSize">@dimen/basic_text_size</item>
     </style>
+
+    <style name="DialogStyle" parent="Theme.Material3.DayNight.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorSecondary">@color/klein_blue</item>
+    </style>
 </resources>

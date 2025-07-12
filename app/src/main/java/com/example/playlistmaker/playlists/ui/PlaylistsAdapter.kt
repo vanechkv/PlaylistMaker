@@ -6,10 +6,11 @@ import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 
 class PlaylistsAdapter(
-    private var playlists: ArrayList<Playlist>
+    private var playlists: ArrayList<Playlist>,
+    private val onPlaylistClick: (Playlist) -> Unit
 ): RecyclerView.Adapter<PlaylistsViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsViewHolder {
-        return PlaylistsViewHolder(parent)
+        return PlaylistsViewHolder(parent, onPlaylistClick)
     }
 
     override fun getItemCount(): Int {

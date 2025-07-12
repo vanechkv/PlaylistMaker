@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".player.ui.AudioPlayerFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,8 +15,7 @@
             android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            tools:context=".AudioPlayerActivity">
+            android:background="?attr/colorPrimary">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/left_guideline"

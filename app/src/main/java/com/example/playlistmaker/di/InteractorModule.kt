@@ -24,7 +24,7 @@ val interactorModule = module {
     }
 
     single<SharingInteractor> {
-        SharingInteractorImpl(androidContext(), get())
+        SharingInteractorImpl(androidContext(), get(), get())
     }
 
     single<AudioPlayerInteractor> {

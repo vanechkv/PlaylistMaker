@@ -155,6 +155,11 @@ class SearchFragment : Fragment() {
         viewModel.saveHistory()
     }
 
+    override fun onResume() {
+        super.onResume()
+        isClickAllowed = true
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_TEXT, binding.searchEditText.text.toString())

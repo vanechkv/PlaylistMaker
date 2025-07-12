@@ -1,6 +1,7 @@
 package com.example.playlistmaker.player.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +18,10 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.playlists.domain.models.PlaylistsState
 import com.example.playlistmaker.search.domain.models.Playlist
+import com.example.playlistmaker.utils.DisplayUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -55,8 +58,6 @@ class AudioPlayerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
@@ -83,7 +84,7 @@ class AudioPlayerFragment : Fragment() {
         Glide.with(this)
             .load(track.artworkUrl100)
             .placeholder(R.drawable.placeholder)
-            .transform(CenterCrop(), RoundedCorners(8))
+            .transform(CenterCrop(), RoundedCorners(DisplayUtils.dpToPx(requireContext(), 8)))
             .into(binding.cover)
 
         binding.buttonBack.setOnClickListener {
@@ -120,16 +121,15 @@ class AudioPlayerFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        overlay.visibility = View.GONE
+                        overlay.isVisible = false
                     }
                     else -> {
-                        overlay.visibility = View.VISIBLE
+                        overlay.isVisible = true
                     }
                 }
             }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
 
         })
 
@@ -178,9 +178,9 @@ class AudioPlayerFragment : Fragment() {
 
     private fun render(state: PlaylistsState) {
         when (state) {
-            is PlaylistsState.Empty -> {}
+            is PlaylistsState.Empty -> Unit
             is PlaylistsState.Content -> showContent(state.playlists)
-            is PlaylistsState.Loading -> {}
+            is PlaylistsState.Loading -> Unit
         }
     }
 

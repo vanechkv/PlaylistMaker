@@ -1,6 +1,7 @@
 package com.example.playlistmaker.main.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -32,7 +33,9 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.addPlaylistFragment,
-                R.id.audioPlayerFragment -> {
+                R.id.audioPlayerFragment,
+                R.id.playlistInfoFragment,
+                R.id.editPlaylistFragment -> {
                     bottomNavView.isVisible = false
                 }
 
