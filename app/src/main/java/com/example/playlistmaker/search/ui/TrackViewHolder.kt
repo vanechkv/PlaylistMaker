@@ -10,6 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.utils.DisplayUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -40,7 +41,7 @@ class TrackViewHolder(parent: ViewGroup, private val onTrackClick: (Track) -> Un
         Glide.with(itemView)
             .load(model.artworkUrl100)
             .placeholder(R.drawable.placeholder)
-            .transform(CenterCrop(), RoundedCorners(2))
+            .transform(CenterCrop(), RoundedCorners(DisplayUtils.dpToPx(itemView.context, 2)))
             .into(artworkUrl100)
     }
 }

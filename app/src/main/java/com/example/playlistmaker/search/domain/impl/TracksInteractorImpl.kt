@@ -63,4 +63,8 @@ class TracksInteractorImpl(private val repository: TracksRepository) : TracksInt
     override fun getFavoriteTracksId(): Flow<List<Int>> {
         return repository.getFavoriteTracksId()
     }
+
+    override fun getTracksInPlaylist(trackIds: List<Int>): Flow<List<Track>> {
+        return repository.getTracksInPlaylist(trackIds)
+    }
 }

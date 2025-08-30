@@ -37,7 +37,7 @@ class PlaylistDbConvertor(
         return gson.toJson(list)
     }
 
-    fun fromJsonToList(json: String): List<Int> {
+    private fun fromJsonToList(json: String): List<Int> {
         return gson.fromJson(json, object : TypeToken<List<Int>>() {})
     }
 }

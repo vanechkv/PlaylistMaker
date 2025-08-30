@@ -43,7 +43,7 @@ class PlaylistFragment : Fragment() {
 
         binding.viewPager.adapter = PlaylistViewPagerAdapter(
             fragmentManager = requireActivity().supportFragmentManager,
-            lifecycle = lifecycle,
+            lifecycle = viewLifecycleOwner.lifecycle,
             emptyMessageFeatured = emptyMessageFeatured,
             emptyMessagePlaylists = emptyMessagePlaylists
         )
