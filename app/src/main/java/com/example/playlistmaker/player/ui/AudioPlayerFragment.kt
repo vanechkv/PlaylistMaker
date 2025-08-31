@@ -16,6 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
+import com.example.playlistmaker.player.domain.model.PlayerState
 import com.example.playlistmaker.playlists.domain.models.PlaylistsState
 import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.utils.DisplayUtils
@@ -97,12 +98,26 @@ class AudioPlayerFragment : Fragment() {
 
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
             binding.buttonPlay.isEnabled = it.isPlayButtonEnabled
-            binding.buttonPlay.setImageResource(it.buttonImg)
+            when (it) {
+                is PlayerState.Playing -> {
+                    binding.buttonPlay.setPlaying(true)
+                }
+                is PlayerState.Paused -> {
+                    binding.buttonPlay.setPlaying(false)
+                }
+                is PlayerState.Prepared -> {
+                    binding.buttonPlay.setPlaying(false)
+                }
+                is PlayerState.Default -> {
+                    binding.buttonPlay.setPlaying(false)
+                }
+            }
             binding.listeningTime.text = it.progress
         }
 
         viewModel.observeIsFavorite().observe(viewLifecycleOwner) { isFavorite ->
-            val icon = if (isFavorite) R.drawable.button_added_to_favorite else R.drawable.button_add_to_favorites
+            val icon =
+                if (isFavorite) R.drawable.button_added_to_favorite else R.drawable.button_add_to_favorites
             binding.buttonAddToFavorite.setImageResource(icon)
         }
 
@@ -117,12 +132,14 @@ class AudioPlayerFragment : Fragment() {
 
         val overlay = binding.overlay
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                         overlay.isVisible = false
                     }
+
                     else -> {
                         overlay.isVisible = true
                     }
@@ -151,8 +168,13 @@ class AudioPlayerFragment : Fragment() {
             if (it.second) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 showToast(getString(R.string.added_to_playlist, it.first))
-            }else {
-                showToast(getString(R.string.the_track_has_already_been_added_to_the_playlist, it.first))
+            } else {
+                showToast(
+                    getString(
+                        R.string.the_track_has_already_been_added_to_the_playlist,
+                        it.first
+                    )
+                )
             }
         }
     }
