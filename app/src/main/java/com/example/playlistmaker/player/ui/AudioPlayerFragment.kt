@@ -1,13 +1,22 @@
 package com.example.playlistmaker.player.ui
 
+import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.os.IBinder
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,12 +26,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.player.domain.model.PlayerState
+import com.example.playlistmaker.player.services.MusicService
 import com.example.playlistmaker.playlists.domain.models.PlaylistsState
 import com.example.playlistmaker.search.domain.models.Playlist
 import com.example.playlistmaker.utils.DisplayUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -57,9 +66,21 @@ class AudioPlayerFragment : Fragment() {
         if (clickDebounce()) viewModel.onPlaylistClicked(viewModel.getTrack(), it)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicServiceBinder
+            viewModel.setAudioPlayerControl(binder.getService())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            viewModel.removeAudioPlayerControl()
+        }
+
     }
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {}
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +94,10 @@ class AudioPlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sdf = SimpleDateFormat("mm:ss", Locale.getDefault())
 
+        requestNotifications()
+
         val track = viewModel.getTrack()
+        bindMusicService(track.previewUrl, track.artistName, track.trackName)
 
         binding.trackName.text = track.trackName
         binding.artistName.text = track.artistName
@@ -102,12 +126,15 @@ class AudioPlayerFragment : Fragment() {
                 is PlayerState.Playing -> {
                     binding.buttonPlay.setPlaying(true)
                 }
+
                 is PlayerState.Paused -> {
                     binding.buttonPlay.setPlaying(false)
                 }
+
                 is PlayerState.Prepared -> {
                     binding.buttonPlay.setPlaying(false)
                 }
+
                 is PlayerState.Default -> {
                     binding.buttonPlay.setPlaying(false)
                 }
@@ -179,6 +206,21 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.hideNotification()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.showNotification()
+    }
+
+    override fun onDestroyView() {
+        unBindMusicService()
+        super.onDestroyView()
+    }
+
     private fun showContent(playlists: List<Playlist>) {
         binding.playlistRecycler.isVisible = true
         adapter.updatePlaylists(playlists)
@@ -206,8 +248,27 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.onPause()
+    private fun bindMusicService(songUrl: String?, artistName: String?, songName: String?) {
+        val intent = Intent(requireContext(), MusicService::class.java).apply {
+            putExtra("song_url", songUrl)
+            putExtra("artist_name", artistName)
+            putExtra("song_name", songName)
+        }
+        requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unBindMusicService() {
+        requireContext().unbindService(serviceConnection)
+    }
+
+    private fun requestNotifications() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val granted = ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!granted) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }
     }
 }
