@@ -1,25 +1,25 @@
 package com.example.playlistmaker.settings.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.sharing.domain.api.interactor.SharingInteractor
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class SettingsViewModel(
     private val sharingInteractor: SharingInteractor,
     private val settingsInteractor: SettingsInteractor
 ) : ViewModel() {
-    private val darkThemeLiveData = MutableLiveData<Boolean>()
-    fun getDarkTheme(): LiveData<Boolean> = darkThemeLiveData
+    private val darkThemeLiveData = MutableStateFlow(false)
+    val getDarkTheme: StateFlow<Boolean> = darkThemeLiveData
 
     init {
-        darkThemeLiveData.postValue(settingsInteractor.isDarkTheme())
+        darkThemeLiveData.value = settingsInteractor.isDarkTheme()
     }
 
     fun setDarkTheme(enabled: Boolean) {
         settingsInteractor.setDarkTheme(enabled)
-        darkThemeLiveData.postValue(enabled)
+        darkThemeLiveData.value = enabled
     }
 
     fun shareApp() {

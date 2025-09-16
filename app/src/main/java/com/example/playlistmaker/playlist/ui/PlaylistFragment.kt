@@ -5,8 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.platform.ComposeView
+import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentPlaylistBinding
+import com.example.playlistmaker.main.ui.ui.theme.PlaylistMakerTheme
+import com.example.playlistmaker.playlist.ui.compose.PlaylistScreen
+import com.example.playlistmaker.search.ui.compose.SearchScreen
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,34 +37,55 @@ class PlaylistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPlaylistBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val emptyMessageFeatured = getString(R.string.your_media_library_is_empty)
-        val emptyMessagePlaylists = getString(R.string.You_havent_created_any_playlists_yet)
-
-        binding.viewPager.adapter = PlaylistViewPagerAdapter(
-            fragmentManager = requireActivity().supportFragmentManager,
-            lifecycle = viewLifecycleOwner.lifecycle,
-            emptyMessageFeatured = emptyMessageFeatured,
-            emptyMessagePlaylists = emptyMessagePlaylists
-        )
-
-        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            when(position) {
-                0 -> tab.text = getString(R.string.featured_tracks)
-                1 -> tab.text = getString(R.string.playlists)
+        val currentMode = AppCompatDelegate.getDefaultNightMode()
+        val isDarkTheme = currentMode == AppCompatDelegate.MODE_NIGHT_YES
+        val composeView = ComposeView(requireContext()).apply {
+            setContent {
+                PlaylistMakerTheme(dynamicColor = false) {
+                    PlaylistScreen(
+                        onFeaturedTrackClick = {
+                            findNavController().navigate(R.id.action_playlistFragment_to_audioPlayerFragment)
+                        },
+                        onAddPlaylistClick = {
+                            findNavController().navigate(R.id.action_playlistFragment_to_addPlaylistFragment)
+                        },
+                        onPlaylistItemClick = { playlistId ->
+                            val direction =
+                                PlaylistFragmentDirections.actionPlaylistFragmentToPlaylistInfoFragment(playlistId)
+                            findNavController().navigate(direction)
+                        },
+                        isDarkTheme = isDarkTheme
+                    )
+                }
             }
         }
-        tabMediator.attach()
+        return composeView
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        tabMediator.detach()
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        val emptyMessageFeatured = getString(R.string.your_media_library_is_empty)
+//        val emptyMessagePlaylists = getString(R.string.You_havent_created_any_playlists_yet)
+//
+//        binding.viewPager.adapter = PlaylistViewPagerAdapter(
+//            fragmentManager = requireActivity().supportFragmentManager,
+//            lifecycle = viewLifecycleOwner.lifecycle,
+//            emptyMessageFeatured = emptyMessageFeatured,
+//            emptyMessagePlaylists = emptyMessagePlaylists
+//        )
+//
+//        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+//            when(position) {
+//                0 -> tab.text = getString(R.string.featured_tracks)
+//                1 -> tab.text = getString(R.string.playlists)
+//            }
+//        }
+//        tabMediator.attach()
+//    }
+//
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        tabMediator.detach()
+//    }
 }

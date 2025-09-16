@@ -11,16 +11,21 @@ import com.example.playlistmaker.search.domain.models.TracksState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewModel() {
     private var searchText: String? = null
+    private val searchQueryStateFlow = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = searchQueryStateFlow
 
-    private val stateLiveData = MutableLiveData<TracksState>()
-    fun observeState(): LiveData<TracksState> = stateLiveData
+    private val stateLiveData =
+        MutableStateFlow<TracksState>(TracksState.Initial)
+    val observeState: StateFlow<TracksState> = stateLiveData
 
-    private val historyLiveData = MutableLiveData<List<Track>>()
-    fun observeHistory(): LiveData<List<Track>> = historyLiveData
+    private val historyLiveData = MutableStateFlow<List<Track>>(emptyList())
+    val observeHistory: StateFlow<List<Track>> = historyLiveData
 
     private val historyTracksList = ArrayList<Track>()
 
@@ -28,18 +33,19 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
 
     init {
         historyTracksList.addAll(tracksInteractor.getHistory())
-        historyLiveData.postValue(historyTracksList)
+        historyLiveData.value = historyTracksList.toList()
     }
 
     fun onTrackClick(track: Track) {
         tracksInteractor.saveTrackToHistory(track, historyTracksList)
-        historyLiveData.postValue(historyTracksList)
+        historyLiveData.value = historyTracksList.toList()
     }
 
     fun clearHistory() {
         historyTracksList.clear()
         tracksInteractor.clearHistory()
-        historyLiveData.postValue(historyTracksList)
+        historyLiveData.value = historyTracksList.toList()
+        renderState(TracksState.SearchHistory(historyTracksList.toList()))
     }
 
     fun saveHistory() {
@@ -50,11 +56,15 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
         if (newSearchText.isNotEmpty()) {
             renderState(TracksState.Loading)
 
+            val query = newSearchText
+
             viewModelScope.launch(Dispatchers.IO) {
                 tracksInteractor
-                    .searchTrack(newSearchText)
+                    .searchTrack(query)
                     .collect { pair ->
-                        processResult(pair.first, pair.second)
+                        if (query == searchText) {
+                            processResult(pair.first, pair.second)
+                        }
                     }
             }
         }
@@ -94,16 +104,18 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
     }
 
     private fun renderState(state: TracksState) {
-        stateLiveData.postValue(state)
+        stateLiveData.value = state
     }
 
     fun searchDebounce(changedText: String) {
-        if(searchText == changedText) {
+        if (searchText == changedText) {
             return
         }
 
         if (changedText.isBlank()) {
-            renderState(TracksState.SearchHistory(historyTracksList))
+            searchText = null
+            searchJob?.cancel()
+            renderState(TracksState.SearchHistory(historyTracksList.toList()))
             return
         }
 
@@ -114,6 +126,19 @@ class SearchViewModel(private val tracksInteractor: TracksInteractor) : ViewMode
             delay(SEARCH_DEBOUNCE_DELAY)
             search(changedText)
         }
+    }
+
+    fun setSearchQuery(newQuery: String) {
+        if (searchQueryStateFlow.value == newQuery) return
+        searchQueryStateFlow.value = newQuery
+        searchDebounce(newQuery)
+    }
+
+    fun clearQuery() {
+        searchQueryStateFlow.value = ""
+        searchText = null
+        searchJob?.cancel()
+        renderState(TracksState.SearchHistory(historyTracksList.toList()))
     }
 
     companion object {
