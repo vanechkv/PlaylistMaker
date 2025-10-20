@@ -8,6 +8,8 @@ import com.example.playlistmaker.featured.domain.models.FeaturedState
 import com.example.playlistmaker.search.domain.api.TracksInteractor
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class FeaturedViewModel(
@@ -15,8 +17,8 @@ class FeaturedViewModel(
     private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<FeaturedState>()
-    fun observeState() : LiveData<FeaturedState> = stateLiveData
+    private val stateLiveData = MutableStateFlow<FeaturedState>(FeaturedState.Loading)
+    val observeState: StateFlow<FeaturedState> = stateLiveData
 
     init {
         renderState(FeaturedState.Loading)
@@ -42,6 +44,6 @@ class FeaturedViewModel(
     }
 
     private fun renderState(state: FeaturedState) {
-        stateLiveData.postValue(state)
+        stateLiveData.value = state
     }
 }

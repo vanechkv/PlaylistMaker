@@ -53,13 +53,12 @@ class AddPlaylistViewModel(
 
         val file = File(filePath, "cover_${System.currentTimeMillis()}.jpg")
 
-        val inputStream = context.contentResolver.openInputStream(uri)
-
-        val outputStream = FileOutputStream(file)
-
-        BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            FileOutputStream(file).use { outputStream ->
+                BitmapFactory.decodeStream(inputStream)
+                    .compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+            }
+        }
 
         return file.absolutePath
     }

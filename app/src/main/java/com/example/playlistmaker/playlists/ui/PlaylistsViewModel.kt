@@ -8,6 +8,8 @@ import com.example.playlistmaker.playlists.domain.api.PlaylistInteractor
 import com.example.playlistmaker.playlists.domain.models.PlaylistsState
 import com.example.playlistmaker.search.domain.models.Playlist
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(
@@ -15,12 +17,12 @@ class PlaylistsViewModel(
     private val playlistInteractor: PlaylistInteractor
 ) : ViewModel() {
 
-    private val stateLiveData = MutableLiveData<PlaylistsState>()
-    fun observeState() : LiveData<PlaylistsState> = stateLiveData
+    private val stateLiveData = MutableStateFlow<PlaylistsState>(PlaylistsState.Loading)
+    val observeState: StateFlow<PlaylistsState> = stateLiveData
 
     init {
         renderState(PlaylistsState.Loading)
-        viewModelScope.launch (Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             playlistInteractor
                 .getPlaylists()
                 .collect { playlists ->
@@ -38,6 +40,6 @@ class PlaylistsViewModel(
     }
 
     private fun renderState(state: PlaylistsState) {
-        stateLiveData.postValue(state)
+        stateLiveData.value = state
     }
 }
